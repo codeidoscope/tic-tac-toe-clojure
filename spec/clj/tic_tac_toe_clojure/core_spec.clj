@@ -6,4 +6,4 @@
   (it "has 9 cells"
     (should= 
       [nil nil nil nil nil nil nil nil nil]
-      (create-cells))))
+      (create-board))))

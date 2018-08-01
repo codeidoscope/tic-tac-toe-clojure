@@ -1,4 +1,4 @@
 (ns tic-tac-toe-clojure.core)
 
-(defn create-cells []
-  [nil nil nil nil nil nil nil nil nil])
+(defn create-board []
+  (into [] (repeat 9 nil)))
