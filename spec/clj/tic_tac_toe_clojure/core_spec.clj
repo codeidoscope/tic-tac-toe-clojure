@@ -5,5 +5,9 @@
 (describe "A board"
   (it "has 9 cells"
     (should= 
-      [nil nil nil nil nil nil nil nil nil]
-      (create-board))))
+      ["_" "_" "_" "_" "_" "_" "_" "_" "_"]
+      (create-board)))
+  (it "is displayed on three lines"
+       (should=
+         "___\n___\n___\n"
+         (display-board))))
