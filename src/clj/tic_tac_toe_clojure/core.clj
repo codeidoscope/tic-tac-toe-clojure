@@ -16,3 +16,9 @@
 
 (defn set-position [board position symbol]
   (assoc board position symbol))
+
+(defn get-user-position []
+   (do (print "Please choose a position between 1 and 9: ") (flush) (read-line)))
+
+(defn swap-player [user-symbol]
+  (if (= "X" user-symbol) "O" "X"))

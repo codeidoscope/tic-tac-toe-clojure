@@ -28,11 +28,20 @@
          "___\n___\n___\n"
       (should=
         "123\n456\n789"
-        (display-board numbered-board)))
-  )
+        (display-board numbered-board))))
 
 (describe "A game"
   (it "prompts a user to pick a symbol"
       (should-contain
         "Y"
-       (with-in-str "Y" (get-user-symbol)))))
+       (with-in-str "Y" (get-user-symbol))))
+
+  (it "prompts a user to pick a position on the board"
+      (should-contain
+       "1"
+        (with-in-str "1" (get-user-position))))
+
+  (it "swaps a player's symbol"
+      (should=
+        "X"
+        (swap-player "O"))))
