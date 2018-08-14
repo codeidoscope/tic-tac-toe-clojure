@@ -45,3 +45,25 @@
       (should=
         "X"
         (swap-player "O"))))
+
+(describe "A decision engine"
+  (it "gets the rows from a board"
+      (should=
+        [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
+        (get-rows (set-position (set-position (set-position create-board 0 "X") 3 "O") 6 "X"))))
+  (it "gets the columns from a board"
+      (should=
+        [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
+        (get-columns (set-position (set-position (set-position create-board 0 "X") 1 "O") 2 "X"))))
+  (it "gets the diagonals from a board"
+      (should=
+        [["X" "O" "X"] ["O" "O" "O"]]
+        (get-diagonals (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 4 "O") 8 "X") 2 "O") 6 "O"))))
+  (it "joins the rows, columns and diagonals"
+     (should=
+       [["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"] ["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"] ["X" "X" "X"] ["O" "X" "O"]]
+       (join-sections (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 4 "X") 8 "X") 2 "O") 6 "O"))))
+  (it "checks if three symbols are aligned"
+      (should=
+        true
+        (three-mapped? (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 4 "X") 8 "X") 2 "O") 6 "O")))))
