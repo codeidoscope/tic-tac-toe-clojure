@@ -32,38 +32,67 @@
 
 (describe "A game"
   (it "prompts a user to pick a symbol"
-      (should-contain
+      (should=
         "Y"
        (with-in-str "Y" (get-user-symbol))))
 
   (it "prompts a user to pick a position on the board"
-      (should-contain
+      (should=
        "1"
         (with-in-str "1" (get-user-position))))
 
   (it "swaps a player's symbol"
       (should=
         "X"
-        (swap-player "O"))))
+        (swap-player "O")))
+
+  (it "tells the user the game is over"
+      (should=
+        "Game is over"
+        (end-game))))
 
 (describe "A decision engine"
   (it "gets the rows from a board"
       (should=
         [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
         (get-rows (set-position (set-position (set-position create-board 0 "X") 3 "O") 6 "X"))))
+
   (it "gets the columns from a board"
       (should=
         [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
         (get-columns (set-position (set-position (set-position create-board 0 "X") 1 "O") 2 "X"))))
+
   (it "gets the diagonals from a board"
       (should=
         [["X" "O" "X"] ["O" "O" "O"]]
         (get-diagonals (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 4 "O") 8 "X") 2 "O") 6 "O"))))
+
   (it "joins the rows, columns and diagonals"
      (should=
        [["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"] ["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"] ["X" "X" "X"] ["O" "X" "O"]]
        (join-sections (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 4 "X") 8 "X") 2 "O") 6 "O"))))
+
   (it "checks if three symbols are aligned"
       (should=
         true
-        (three-mapped? (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 4 "X") 8 "X") 2 "O") 6 "O")))))
+        (three-mapped? (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 4 "X") 8 "X") 2 "O") 6 "O"))))
+
+  (it "returns true if a board is full"
+      (should=
+        true
+        (board-full? (set-position (set-position (set-position (set-position (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 1 "O") 2 "X") 3 "O") 4 "X") 5 "O") 6 "X") 7 "O") 8 "X"))))
+
+  (it "returns false if a board is not full"
+      (should=
+        false
+        (board-full? (set-position (set-position (set-position (set-position (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 1 "O") 2 "X") 3 "O") 4 "X") 5 "O") 6 "X") 7 "O") 8 "_"))))
+
+  (it "returns true if the game is over because three symbols are aligned"
+      (should=
+        true
+        (game-over? (set-position (set-position (set-position (set-position (set-position create-board 0 "X") 4 "X") 8 "X") 2 "O") 6 "O"))))
+
+  (it "returns true if the game is over because the board is full"
+      (should=
+        true
+        (game-over? ["X" "O" "X" "O" "X" "O" "X" "O" "X"]))))

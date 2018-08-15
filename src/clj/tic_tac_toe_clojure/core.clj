@@ -1,6 +1,9 @@
 (ns tic-tac-toe-clojure.core (:require [clojure.string :as string]))
+(declare start-game)
 (defn -main [& args]
-  (println "Working!"))
+  (if-not (first args)
+  (start-game)
+  (println "Hello" (first args))))
 
 (def create-board
   (into [] (repeat 9 "_")))
@@ -30,14 +33,14 @@
   (apply map vector (get-rows board)))
 
 (defn get-diagonals [board]
-  [[(nth board 0) (nth board 4) (nth board 8)] 
-   [(nth board 2) (nth board 4) (nth board 6)]]) 
+  [[(nth board 0) (nth board 4) (nth board 8)]
+   [(nth board 2) (nth board 4) (nth board 6)]])
 
 (defn join-sections [board]
   (concat (get-rows board) (concat (get-columns board)) (concat(get-diagonals board))))
 
 (defn symbols-equal? [section]
-  (if (= (nth section 0) (nth section 1) (nth section 2)) true false))
+  (if (and (= (nth section 0) (nth section 1) (nth section 2)) (not= (str section) "___")) true false))
 
 (defn three-aligned? [board]
   (some true? (for [section (join-sections board)] (symbols-equal? section))))
@@ -45,4 +48,23 @@
 (defn three-mapped? [board]
   (some true? (map symbols-equal? (join-sections board))))
 
+(defn board-full? [board]
+  (if (some #{"_"} board) false true))
 
+(defn end-game []
+  (with-out-str (print "Game is over")))
+
+(defn game-over? [board]
+  (if (or (three-aligned? board) (board-full? board)) true false))
+
+(defn next-player-turn [board user-symbol]
+   (set-position board (get-user-position) user-symbol)
+   (swap-player user-symbol))
+
+(defn take-turn [board user-symbol]
+  (if (game-over? board) (end-game) (next-player-turn board user-symbol)))
+
+(defn start-game []
+  (let [user-symbol (get-user-symbol)]
+  (display-board numbered-board)
+  (take-turn (create-board) user-symbol)))
