@@ -62,7 +62,7 @@
 (defn next-player-turn [board user-symbol]
  (display-board board)
  (swap-player user-symbol)
- (next-player-turn (set-position board (get-user-position) user-symbol) user-symbol))
+ (next-player-turn (set-position board (get-user-position) user-symbol) (swap-player user-symbol)))
 
 (defn take-turn [board user-symbol]
   (while (= (game-over? board) false) (do (next-player-turn board user-symbol))))
