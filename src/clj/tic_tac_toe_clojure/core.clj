@@ -60,8 +60,7 @@
   (if (or (three-aligned? board) (board-full? board)) true false))
 
 (defn next-player-turn [board user-symbol]
- (display-board board)
- (set-position board (get-user-position) user-symbol)
+ (display-board (set-position board (get-user-position) user-symbol))
  (swap-player user-symbol) board)
 
 (defn take-turn [board user-symbol]
