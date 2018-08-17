@@ -10,14 +10,17 @@
 (defn numbered-board []
   ["1" "2" "3" "4" "5" "6" "7" "8" "9"])
 
-(defn display-board [board]
+(defn build-board [board]
   (with-out-str (println (string/join "\n" (re-seq #".{1,3}" (apply str board))))))
+
+(defn display-board [board]
+  (print (build-board board)))
 
 (defn get-user-symbol []
   (do (print "Please choose a symbol (X or O): ") (flush) (read-line)))
 
 (defn get-user-position []
-  (apply str (do (print "Please choose a position between 1 and 9: ") (flush) (read-line))))
+ (Integer/parseInt (do (print "Please choose a position between 1 and 9: ") (flush) (read-line))))
 
 (defn set-position [board position user-symbol]
   (assoc board position user-symbol))
@@ -59,7 +62,7 @@
 (defn next-player-turn [board user-symbol]
  (display-board board)
  (set-position board (get-user-position) user-symbol)
- (swap-player user-symbol))
+ (swap-player user-symbol) board)
 
 (defn take-turn [board user-symbol]
   (while (= (game-over? board) false) (do (next-player-turn board user-symbol))))
@@ -68,4 +71,6 @@
   (let [user-symbol (get-user-symbol)]
     (display-board (numbered-board))
     (let [board (create-board)]
-      (if (game-over? (next-player-turn board user-symbol)) (end-game) (next-player-turn board user-symbol)))))
+      (if (game-over? (next-player-turn board user-symbol))
+        (end-game)
+        (next-player-turn board user-symbol)))))

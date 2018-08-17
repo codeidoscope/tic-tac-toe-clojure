@@ -24,10 +24,11 @@
   (it "is displayed on three lines"
       (should=
         "___\n___\n___\n"
-        (display-board (create-board)))
+        (build-board (create-board)))
+
       (should=
         "123\n456\n789\n"
-        (display-board (numbered-board)))))
+        (build-board (numbered-board)))))
 
 (describe "A game"
   (it "prompts a user to pick a symbol"
@@ -37,7 +38,7 @@
 
   (it "prompts a user to pick a position on the board"
       (should=
-       "1"
+       1
         (with-in-str "1" (get-user-position))))
 
   (it "swaps a player's symbol"
