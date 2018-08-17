@@ -27,7 +27,7 @@
         (build-board (create-board)))
 
       (should=
-        "123\n456\n789\n"
+        "012\n345\n678\n"
         (build-board (numbered-board)))))
 
 (describe "A game"
