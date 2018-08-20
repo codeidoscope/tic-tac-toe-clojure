@@ -7,8 +7,8 @@
 (defn create-board []
   (into [] (repeat 9 "_")))
 
-(defn numbered-board []
-  ["1" "2" "3" "4" "5" "6" "7" "8" "9"])
+(def numbered-board
+  ["0" "1" "2" "3" "4" "5" "6" "7" "8"])
 
 (defn build-board [board]
   (with-out-str (println (string/join "\n" (re-seq #".{1,3}" (apply str board))))))
@@ -20,7 +20,7 @@
   (do (print "Please choose a symbol (X or O): ") (flush) (read-line)))
 
 (defn get-user-position []
- (Integer/parseInt (do (print "Please choose a position between 1 and 9: ") (flush) (read-line))))
+ (Integer/parseInt (do (print "Please choose a position between 0 and 8: ") (flush) (read-line))))
 
 (defn set-position [board position user-symbol]
   (assoc board position user-symbol))
@@ -53,24 +53,22 @@
 (defn board-full? [board]
   (if (some #{"_"} board) false true))
 
-(defn end-game []
-  (with-out-str (println "Game is over")))
+(def end-game "Game is over")
 
 (defn game-over? [board]
   (if (or (three-aligned? board) (board-full? board)) true false))
 
 (defn next-player-turn [board user-symbol]
+  (display-board board)
   (if (game-over? board)
-   ((display-board board)
-    (print (end-game)))
-   ((display-board board)
-    (next-player-turn (set-position board (get-user-position) user-symbol) (swap-player user-symbol)))))
+    (println end-game)
+    (next-player-turn (set-position board (get-user-position) user-symbol) (swap-player user-symbol))))
 
 (defn take-turn [board user-symbol]
   (while (= (game-over? board) false) (do (next-player-turn board user-symbol))))
 
 (defn start-game []
   (let [user-symbol (get-user-symbol)]
-    (display-board (numbered-board))
+    (display-board numbered-board)
     (let [board (create-board)]
       (next-player-turn board user-symbol))))

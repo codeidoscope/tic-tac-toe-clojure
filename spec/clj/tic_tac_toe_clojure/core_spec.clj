@@ -28,7 +28,7 @@
 
       (should=
         "012\n345\n678\n"
-        (build-board (numbered-board)))))
+        (build-board numbered-board))))
 
 (describe "A game"
   (it "prompts a user to pick a symbol"
@@ -48,8 +48,8 @@
 
   (it "tells the user the game is over"
       (should=
-        "Game is over\n"
-        (end-game))))
+        "Game is over"
+        end-game)))
 
 (describe "A decision engine"
   (it "gets the rows from a board"
