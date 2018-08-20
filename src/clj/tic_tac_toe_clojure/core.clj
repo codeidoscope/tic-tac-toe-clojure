@@ -19,7 +19,7 @@
 (defn get-user-symbol []
   (do (print "Please choose a symbol (X or O): ") (flush) (read-line)))
 
-(defn get-user-position []
+(defn get-human-position []
  (Integer/parseInt (do (print "Please choose a position between 0 and 8: ") (flush) (read-line))))
 
 (defn set-position [board position user-symbol]
@@ -62,7 +62,7 @@
   (display-board board)
   (if (game-over? board)
     (println end-game)
-    (next-player-turn (set-position board (get-user-position) user-symbol) (swap-player user-symbol))))
+    (next-player-turn (set-position board (get-human-position) user-symbol) (swap-player user-symbol))))
 
 (defn take-turn [board user-symbol]
   (while (= (game-over? board) false) (do (next-player-turn board user-symbol))))

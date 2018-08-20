@@ -36,10 +36,10 @@
         "Y"
        (with-in-str "Y" (get-user-symbol))))
 
-  (it "prompts a user to pick a position on the board"
+  (it "prompts a human player to pick a position on the board"
       (should=
        1
-        (with-in-str "1" (get-user-position))))
+        (with-in-str "1" (get-human-position))))
 
   (it "swaps a player's symbol"
       (should=
