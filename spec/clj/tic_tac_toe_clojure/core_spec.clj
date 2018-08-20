@@ -41,6 +41,11 @@
        1
         (with-in-str "1" (get-human-position))))
 
+  (it "prompts a user to select a player type"
+      (should=
+        "C"
+        (with-in-str "C" (get-player-type))))
+
   (it "swaps a player's symbol"
       (should=
         "X"

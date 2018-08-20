@@ -16,6 +16,9 @@
 (defn display-board [board]
   (print (build-board board)))
 
+(defn get-player-type []
+  (do (print "Please select an opponent (H for human or C for computer): ") (flush) (read-line)))
+
 (defn get-user-symbol []
   (do (print "Please choose a symbol (X or O): ") (flush) (read-line)))
 
