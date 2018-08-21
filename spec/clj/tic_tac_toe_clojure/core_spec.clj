@@ -3,32 +3,40 @@
 (describe "A board"
   (it "has 9 cells"
       (should=
-        ["_" "_" "_" "_" "_" "_" "_" "_" "_"]
+        ["_" "_" "_" 
+         "_" "_" "_"
+         "_" "_" "_"]
         (create-board)))
 
   (it "sets a X mark at the correct position"
       (should=
-        ["X" "_" "_" "_" "_" "_" "_" "_" "_"]
+        ["X" "_" "_" 
+         "_" "_" "_" 
+         "_" "_" "_"]
         (set-position (create-board) 0 "X")))
 
-  (it "sets a X mark O mark at the correct position"
+  (it "sets an X mark followed by an O mark in the correct positions"
       (should=
-        ["X" "O" "_" "_" "_" "_" "_" "_" "_"]
+        ["X" "O" "_" 
+         "_" "_" "_" 
+         "_" "_" "_"]
         (set-position (set-position (create-board) 0 "X") 1 "O")))
 
-  (it "sets a O mark at the correct position"
+  (it "sets an O mark in the correct position"
       (should=
-        ["O" "_" "_" "_" "_" "_" "_" "_" "_"]
+        ["O" "_" "_" 
+         "_" "_" "_" 
+         "_" "_" "_"]
         (set-position (create-board) 0 "O")))
 
   (it "is displayed on three lines"
       (should=
         "___\n___\n___\n"
-        (build-board (create-board)))
+        (format-board (create-board)))
 
       (should=
         "012\n345\n678\n"
-        (build-board numbered-board))))
+        (format-board numbered-board))))
 
 (describe "A game"
   (it "prompts a user to pick a symbol"
@@ -55,37 +63,53 @@
   (it "gets the rows from a board"
       (should=
         [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
-        (get-rows (set-position (set-position (set-position (create-board) 0 "X") 3 "O") 6 "X"))))
+        (get-rows ["X" "_" "_" 
+                   "O" "_" "_" 
+                   "X" "_" "_"])))
 
   (it "gets the columns from a board"
       (should=
         [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
-        (get-columns (set-position (set-position (set-position (create-board) 0 "X") 1 "O") 2 "X"))))
+        (get-columns ["X" "O" "X" 
+                      "_" "_" "_" 
+                      "_" "_" "_"])))
 
   (it "gets the diagonals from a board"
       (should=
         [["X" "O" "X"] ["O" "O" "O"]]
-        (get-diagonals (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "O") 8 "X") 2 "O") 6 "O"))))
+        (get-diagonals ["X" "_" "O" 
+                        "_" "O" "_" 
+                        "O" "_" "X"])))
 
   (it "joins the rows, columns and diagonals"
      (should=
-       [["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"] ["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"] ["X" "X" "X"] ["O" "X" "O"]]
-       (join-sections (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O"))))
+       [["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"]
+        ["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"] 
+        ["X" "X" "X"] ["O" "X" "O"]]
+       (join-sections ["X" "_" "O"
+                       "_" "X" "_" 
+                       "O" "_" "X"])))
 
   (it "checks if three symbols are aligned"
       (should=
         true
-        (three-mapped? (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O"))))
+        (three-aligned? ["X" "_" "O" 
+                         "_" "X" "_" 
+                         "O" "_" "X"])))
 
   (it "returns true if a board is full"
       (should=
         true
-        (board-full? (set-position (set-position (set-position (set-position (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 1 "O") 2 "X") 3 "O") 4 "X") 5 "O") 6 "X") 7 "O") 8 "X"))))
+        (board-full? ["X" "O" "X" 
+                      "O" "X" "O" 
+                      "X" "O" "X"])))
 
   (it "returns false if a board is not full"
       (should=
         false
-        (board-full? (set-position (set-position (set-position (set-position (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 1 "O") 2 "X") 3 "O") 4 "X") 5 "O") 6 "X") 7 "O") 8 "_"))))
+        (board-full? ["X" "O" "X" 
+                      "O" "X" "O" 
+                      "X" "O" "_"])))
 
   (it "returns true if the game is over because three symbols are aligned"
       (should=
@@ -95,4 +119,6 @@
   (it "returns true if the game is over because the board is full"
       (should=
         true
-        (game-over? ["X" "O" "X" "O" "X" "O" "X" "O" "X"]))))
+        (game-over? ["X" "O" "X" 
+                     "O" "X" "O" 
+                     "X" "O" "X"]))))
