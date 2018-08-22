@@ -46,6 +46,11 @@
         "C"
         (with-in-str "C" (get-player-type))))
 
+  (it "picks a random empty position for a computer"
+      (should=
+        3
+        (get-computer-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] (fn [_] [3 "O"]))))
+
   (it "swaps a player's symbol"
       (should=
         "X"

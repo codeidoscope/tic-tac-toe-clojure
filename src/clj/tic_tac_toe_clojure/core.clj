@@ -25,6 +25,9 @@
 (defn get-human-position []
  (Integer/parseInt (do (print "Please choose a position between 0 and 8: ") (flush) (read-line))))
 
+(defn get-computer-position [board randomiser]
+  (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
+
 (defn set-position [board position user-symbol]
   (assoc board position user-symbol))
 
