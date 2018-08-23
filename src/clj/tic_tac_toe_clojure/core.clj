@@ -19,7 +19,7 @@
 (defn get-player-type []
   (do (print "Please select an opponent (H for human or C for computer): ") (flush) (read-line)))
 
-(defn get-user-symbol []
+(defn get-player-symbol []
   (do (print "Please choose a symbol (X or O): ") (flush) (read-line)))
 
 (defn get-human-position []
@@ -28,11 +28,11 @@
 (defn get-computer-position [board randomiser]
   (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
 
-(defn set-position [board position user-symbol]
-  (assoc board position user-symbol))
+(defn set-position [board position player-symbol]
+  (assoc board position player-symbol))
 
-(defn swap-player [user-symbol]
-  (if (= "X" user-symbol) "O" "X"))
+(defn swap-player [player-symbol]
+  (if (= "X" player-symbol) "O" "X"))
 
 (defn get-rows [board]
   (partition 3 board))

@@ -31,17 +31,18 @@
         (build-board numbered-board))))
 
 (describe "A game"
-  (it "prompts a user to pick a symbol"
+          (with-stubs)
+  (it "prompts a player to pick a symbol"
       (should=
         "Y"
-       (with-in-str "Y" (get-user-symbol))))
+       (with-in-str "Y" (get-player-symbol))))
 
   (it "prompts a human player to pick a position on the board"
       (should=
        1
         (with-in-str "1" (get-human-position))))
 
-  (it "prompts a user to select a player type"
+  (it "prompts a player to select a player type"
       (should=
         "C"
         (with-in-str "C" (get-player-type))))
@@ -56,7 +57,7 @@
         "X"
         (swap-player "O")))
 
-  (it "tells the user the game is over"
+  (it "tells the player the game is over"
       (should=
         "Game is over"
         end-game)))
