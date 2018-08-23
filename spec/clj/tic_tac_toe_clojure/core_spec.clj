@@ -52,6 +52,10 @@
         3
         (get-computer-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] (fn [_] [3 "O"]))))
 
+  (it "gets the player position if player is human"
+      (should=
+        1
+        (with-in-str "1" (get-player-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] "h"))))
   (it "swaps a player's symbol"
       (should=
         "X"

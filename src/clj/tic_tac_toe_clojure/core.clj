@@ -28,6 +28,9 @@
 (defn get-computer-position [board randomiser]
   (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
 
+(defn get-player-position [board player-type]
+  (if (= "h" player-type) (get-human-position) (get-computer-position board rand-nth)))
+
 (defn set-position [board position player-symbol]
   (assoc board position player-symbol))
 
@@ -64,17 +67,19 @@
 (defn game-over? [board]
   (if (or (three-aligned? board) (board-full? board)) true false))
 
-(defn next-player-turn [board user-symbol]
+(defn next-player-turn [board player-symbol player-type]
   (display-board board)
   (if (game-over? board)
     (println end-game)
-    (next-player-turn (set-position board (get-human-position) user-symbol) (swap-player user-symbol))))
+    (next-player-turn (set-position board (get-player-position board player-type) player-symbol) (swap-player player-symbol) player-type)))
 
-(defn take-turn [board user-symbol]
-  (while (= (game-over? board) false) (do (next-player-turn board user-symbol))))
+(defn take-turn [board player-symbol]
+  (while (= (game-over? board) false) (do (next-player-turn board player-symbol))))
 
 (defn start-game []
-  (let [user-symbol (get-user-symbol)]
-    (display-board numbered-board)
-    (let [board (create-board)]
-      (next-player-turn board user-symbol))))
+  (let [player-type (get-player-type)]
+    (let [player-symbol (get-player-symbol)]
+      (display-board numbered-board)
+      (let [board (create-board)]
+        (next-player-turn board player-symbol player-type)))))
+
