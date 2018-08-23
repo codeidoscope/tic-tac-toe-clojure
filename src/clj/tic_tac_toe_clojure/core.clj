@@ -37,7 +37,7 @@
 (defn swap-player-type [player-type]
   (if (= "h" player-type) "c" "h"))
 
-(defn swap-player [player-symbol]
+(defn swap-player-symbol [player-symbol]
   (if (= "X" player-symbol) "O" "X"))
 
 (defn get-rows [board]
@@ -74,7 +74,7 @@
   (display-board board)
   (if (game-over? board)
     (println end-game)
-    (next-player-turn (set-position board (get-player-position board player-type) player-symbol) (swap-player player-symbol) player-type)))
+    (next-player-turn (set-position board (get-player-position board player-type) player-symbol) (swap-player-symbol player-symbol) player-type)))
 
 (defn take-turn [board player-symbol]
   (while (= (game-over? board) false) (do (next-player-turn board player-symbol))))

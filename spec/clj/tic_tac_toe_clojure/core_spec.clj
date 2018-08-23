@@ -56,25 +56,32 @@
       (should=
         1
         (with-in-str "1" (get-player-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] "h"))))
-  (it "swaps a player's symbol"
-      (should=
-        "X"
-        (swap-player "O")))
 
-  (it "swaps a human player's type"
-      (should=
-        "c"
-        (swap-player-type "h")))
   ;(it "gets the player position if player is computer"
   ;    (with-redefs 
   ;      [get-computer-position (stub :get-computer-position)
   ;                  (get-player-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] "c")
   ;                  (should-have-invoked :get-computer-position {:with [:board :randomiser]})]))
 
-  (it "swaps a computer player's type"
+   (it "swaps a human player's type"
+       (should=
+         "c"
+         (swap-player-type "h")))
+
+   (it "swaps a computer player's type"
+       (should=
+         "h"
+         (swap-player-type "c")))
+
+  (it "swaps a player's nought symbol"
       (should=
-        "h"
-        (swap-player-type "c")))
+        "X"
+        (swap-player-symbol "O")))
+
+  (it "swaps a player's cross symbol"
+     (should=
+       "X"
+       (swap-player-symbol "O")))
 
   (it "tells the player the game is over"
       (should=
