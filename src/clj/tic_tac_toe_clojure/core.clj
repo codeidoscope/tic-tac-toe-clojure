@@ -34,6 +34,9 @@
 (defn set-position [board position player-symbol]
   (assoc board position player-symbol))
 
+(defn swap-player-type [player-type]
+  (if (= "h" player-type) "c" "h"))
+
 (defn swap-player [player-symbol]
   (if (= "X" player-symbol) "O" "X"))
 

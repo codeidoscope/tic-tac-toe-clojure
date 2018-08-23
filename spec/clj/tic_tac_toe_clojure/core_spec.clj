@@ -61,6 +61,16 @@
         "X"
         (swap-player "O")))
 
+  (it "swaps a human player's type"
+      (should=
+        "c"
+        (swap-player-type "h")))
+
+  (it "swaps a computer player's type"
+      (should=
+        "h"
+        (swap-player-type "c")))
+
   (it "tells the player the game is over"
       (should=
         "Game is over"
