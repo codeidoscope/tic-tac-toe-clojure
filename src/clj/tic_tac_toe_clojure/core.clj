@@ -74,7 +74,7 @@
   (display-board board)
   (if (game-over? board)
     (println end-game)
-    (next-player-turn (set-position board (get-player-position board player-type) player-symbol) (swap-player-symbol player-symbol) player-type)))
+    (next-player-turn (set-position board (get-player-position board player-type) player-symbol) (swap-player-symbol player-symbol) (swap-player-type player-type))))
 
 (defn take-turn [board player-symbol]
   (while (= (game-over? board) false) (do (next-player-turn board player-symbol))))
