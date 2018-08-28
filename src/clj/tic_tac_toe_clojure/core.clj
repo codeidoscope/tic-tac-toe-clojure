@@ -16,8 +16,8 @@
 (defn display-board [board]
   (print (format-board board)))
 
-(defn get-player-type []
-  (do (print "Please select an opponent (H for human or C for computer): ") (flush) (read-line)))
+;(defn get-player-type []
+; (do (print "Please select an opponent (H for human or C for computer): ") (flush) (read-line)))
 
 (defn get-player-symbol []
   (do (print "Please choose a symbol (X or O): ") (flush) (read-line)))
@@ -33,8 +33,18 @@
 
 (def set-position assoc)
 
-(defn swap-player-type [player-type]
+(defn get-opponent []
+  (do (print "Please select an opponent (H for human or C for computer): ") (flush) (read-line)))
+
+(defn get-game-type [opponent]
+  (with-out-str(print opponent)))
+
+(defn swap-type [player-type]
   (if (= "h" player-type) "c" "h"))
+
+(defn swap-player-type [game-type player-type]
+  (if (="h" game-type) "h" (swap-type player-type)))
+
 
 (defn swap-player-symbol [player-symbol]
   (if (= "X" player-symbol) "O" "X"))
@@ -69,15 +79,18 @@
 (defn game-over? [board]
   (if (or (three-aligned? board) (board-full? board)) true false))
 
-(defn next-player-turn [board player-symbol player-type]
+(defn next-player-turn [board player-symbol game-type player-type]
   (display-board board)
   (if (game-over? board)
     (println end-game)
-    (next-player-turn (set-position board (get-player-position board player-type) player-symbol) (swap-player-symbol player-symbol) (swap-player-type player-type))))
+    (next-player-turn (set-position board (get-player-position board player-type) player-symbol) (swap-player-symbol player-symbol) game-type (swap-player-type game-type player-type))))
 
 (defn start-game []
-  (let [player-type (get-player-type)]
-    (let [player-symbol (get-player-symbol)]
-      (display-board numbered-board)
-      (let [board (create-board)]
-        (next-player-turn board player-symbol player-type)))))
+  (let [opponent (get-opponent)]
+    (let [game-type (get-game-type opponent)]
+      (println game-type)
+      (let [player-symbol (get-player-symbol)]
+        (display-board numbered-board)
+        (let [board (create-board)]
+          (next-player-turn board player-symbol game-type opponent))))))
+
