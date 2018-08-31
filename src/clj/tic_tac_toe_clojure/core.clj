@@ -48,7 +48,6 @@
 (defn swap-player-type [game-type player-type]
   (if (="h" game-type) "h" (swap-type player-type)))
 
-
 (defn swap-player-symbol [player-symbol]
   (if (= "X" player-symbol) "O" "X"))
 
@@ -86,7 +85,13 @@
   (display-board board)
   (if (game-over? board)
     (println end-game)
-    (next-player-turn (set-position board (get-player-position board player-type) player-symbol) (swap-player-symbol player-symbol) game-type (swap-player-type game-type player-type))))
+    (next-player-turn 
+      (set-position board 
+                    (get-player-position board player-type) 
+                    player-symbol) 
+      (swap-player-symbol player-symbol) 
+      game-type 
+      (swap-player-type game-type player-type))))
 
 (defn start-game []
   (let [opponent (get-opponent)]
