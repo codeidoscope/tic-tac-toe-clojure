@@ -79,12 +79,12 @@
    (it "swaps a human player's type"
        (should=
          "c"
-         (swap-player-type "h")))
+         (swap-player-type "c" "h")))
 
    (it "swaps a computer player's type"
        (should=
          "h"
-         (swap-player-type "c")))
+         (swap-player-type "c" "c")))
 
   (it "swaps a player's nought symbol"
       (should=
