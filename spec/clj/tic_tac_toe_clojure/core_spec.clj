@@ -29,6 +29,11 @@
          "_" "_" "_"]
         (set-position (create-board) 0 "O")))
 
+  (it "tests a Computer VS Human game"
+      (let [output (with-out-str (with-in-str "c\nX\n2\n5\n8" (start-game)))]
+        (should= "Please select an opponent (H for human or C for computer): c\nPlease choose a symbol (X or O): 012\n345\n678\n___\n___\n___\nX__\n___\n___\nPlease choose a position between 0 and 8: X_O\n___\n___\nXXO\n___\n___\nPlease choose a position between 0 and 8: XXO\n__O\n___\nXXO\nX_O\n___\nPlease choose a position between 0 and 8: XXO\nX_O\n__O\nGame is over\n"
+                 output)))
+  
   (it "is displayed on three lines"
       (should=
         "___\n___\n___\n"
