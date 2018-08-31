@@ -60,6 +60,11 @@
         3
         (get-computer-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] (fn [_] [3 "O"]))))
 
+  (it "picks the first available position for a computer"
+      (should=
+        1
+        (get-first-available-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"])))
+
   (it "gets the player position if player is human"
       (should=
         1

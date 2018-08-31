@@ -28,8 +28,11 @@
 (defn get-computer-position [board randomiser]
   (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
 
+(defn get-first-available-position [board]
+  (get (first (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
+
 (defn get-player-position [board player-type]
-  (if (= "h" player-type) (get-human-position) (get-computer-position board rand-nth)))
+  (if (= "h" player-type) (get-human-position) (get-first-available-position board)))
 
 (def set-position assoc)
 
