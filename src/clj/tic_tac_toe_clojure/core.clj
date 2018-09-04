@@ -19,11 +19,15 @@
 ;(defn get-player-type []
 ; (do (print "Please select an opponent (H for human or C for computer): ") (flush) (read-line)))
 
-(defn get-player-symbol []
-  (do (print "Please choose a symbol (X or O): ") (flush) (read-line)))
+(def symbol-prompt "Please choose a symbol (X or O): ")
+
+(def position-prompt "Please choose a position between 0 and 8: ")
+
+(defn prompt-user [prompt]
+  (do (print prompt) (flush) (read-line)))
 
 (defn get-human-position []
- (Integer/parseInt (do (print "Please choose a position between 0 and 8: ") (flush) (read-line))))
+  (Integer/parseInt (prompt-user position-prompt)))
 
 ;(defn get-computer-position [board randomiser]
 ;  (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))

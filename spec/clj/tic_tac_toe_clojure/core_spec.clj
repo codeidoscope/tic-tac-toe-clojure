@@ -49,7 +49,7 @@
   (it "prompts a player to pick a symbol"
       (should=
         "Y"
-       (with-in-str "Y" (get-player-symbol))))
+       (with-in-str "Y" (prompt-user "fake prompt"))))
 
   (it "prompts a human player to pick a position on the board"
       (should=
