@@ -61,10 +61,10 @@
         "C"
         (with-in-str "C" (get-player-type))))
 
-  (it "picks a random empty position for a computer"
-      (should=
-        3
-        (get-computer-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] (fn [_] [3 "O"]))))
+;  (it "picks a random empty position for a computer"
+;      (should=
+;        3
+;        (get-computer-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] (fn [_] [3 "O"]))))
 
   (it "picks the first available position for a computer"
       (should=
@@ -100,12 +100,7 @@
   (it "swaps a player's cross symbol"
      (should=
        "X"
-       (swap-player-symbol "O")))
-
-  (it "tells the player the game is over"
-      (should=
-        "Game is over"
-        end-game)))
+       (swap-player-symbol "O"))))
 
 (describe "A decision engine"
   (it "gets the rows from a board"
