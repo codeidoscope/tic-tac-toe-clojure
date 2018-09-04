@@ -21,13 +21,13 @@
 
 (def symbol-prompt "Please choose a symbol (X or O): ")
 
-(def position-prompt "Please choose a position between 0 and 8: ")
+(def select-position "Please choose a position between 0 and 8: ")
 
 (defn prompt-user [prompt]
   (do (print prompt) (flush) (read-line)))
 
 (defn get-human-position []
-  (Integer/parseInt (prompt-user position-prompt)))
+  (Integer/parseInt (prompt-user select-position)))
 
 ;(defn get-computer-position [board randomiser]
 ;  (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
@@ -40,8 +40,7 @@
 
 (def set-position assoc)
 
-(defn get-opponent []
-  (do (print "Please select an opponent (H for human or C for computer): ") (flush) (read-line)))
+(def select-opponent "Please select an opponent (H for human or C for computer): ")
 
 (defn get-game-type [opponent]
   (with-out-str(print opponent)))
@@ -85,24 +84,41 @@
 (defn game-over? [board]
   (if (or (three-aligned? board) (board-full? board)) true false))
 
-(defn next-player-turn [board player-symbol game-type player-type]
+(defprotocol Player
+  (get-symbol [this])
+  (get-move [this board]))
+
+(deftype HumanPlayer [symbol]
+  Player
+  (get-symbol [this] symbol)
+  (get-move [this board]
+    (get-human-position)))
+
+(deftype ComputerPlayer [symbol]
+  Player
+  (get-symbol [this] symbol)
+  (get-move [this board]
+    (get-first-available-position board)))
+
+(defn next-player-turn [board current-player other-player]
   (display-board board)
   (if (game-over? board)
     (println end-game)
-    (next-player-turn 
-      (set-position board 
-                    (get-player-position board player-type) 
-                    player-symbol) 
-      (swap-player-symbol player-symbol) 
-      game-type 
-      (swap-player-type game-type player-type))))
+    (recur
+      (set-position board
+                    (get-move current-player board)
+                    (get-symbol current-player))
+      other-player
+      current-player)))
+
+(defn get-player [marker]
+  (let [player-type (prompt-user select-opponent)]
+  (if (= player-type "h")
+    (HumanPlayer. marker)
+    (ComputerPlayer. marker))))
 
 (defn start-game []
-  (let [opponent (get-opponent)]
-    (let [game-type (get-game-type opponent)]
-      (println game-type)
-      (let [player-symbol (get-player-symbol)]
-        (display-board numbered-board)
-        (let [board (create-board)]
-          (next-player-turn board player-symbol game-type opponent))))))
-
+  (let [player-1 (get-player "X")
+        player-2 (get-player "O")]
+    (display-board numbered-board)
+    (next-player-turn (create-board) player-2 player-1)))

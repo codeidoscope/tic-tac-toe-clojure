@@ -29,11 +29,6 @@
          "_" "_" "_"]
         (set-position (create-board) 0 "O")))
 
-  (it "tests a Computer VS Human game"
-      (let [output (with-out-str (with-in-str "c\nX\n2\n5\n8" (start-game)))]
-        (should= "Please select an opponent (H for human or C for computer): c\nPlease choose a symbol (X or O): 012\n345\n678\n___\n___\n___\nX__\n___\n___\nPlease choose a position between 0 and 8: X_O\n___\n___\nXXO\n___\n___\nPlease choose a position between 0 and 8: XXO\n__O\n___\nXXO\nX_O\n___\nPlease choose a position between 0 and 8: XXO\nX_O\n__O\nGame is over\n"
-                 output)))
-  
   (it "is displayed on three lines with separators when empty"
       (should=
         "_ | _ | _\n---------\n_ | _ | _\n---------\n_ | _ | _\n---------\n"
@@ -165,3 +160,106 @@
         (game-over? ["X" "O" "X" 
                      "O" "X" "O" 
                      "X" "O" "X"]))))
+
+(describe "A game"
+
+  (it "tests a Human VS Human game"
+      (let [output (with-out-str (with-in-str "h\nh\n0\n2\n3\n5\n6" (start-game)))
+            board-state-1 (create-board)
+            board-state-2 (set-position board-state-1 0 "O")
+            board-state-3 (set-position board-state-2 2 "X")
+            board-state-4 (set-position board-state-3 3 "O")
+            board-state-5 (set-position board-state-4 5 "X")
+            board-state-6 (set-position board-state-5 6 "O")]
+        (should=
+          (str select-opponent
+               select-opponent
+               (format-board numbered-board)
+               (format-board board-state-1)
+               select-position
+               (format-board board-state-2)
+               select-position
+               (format-board board-state-3)
+               select-position
+               (format-board board-state-4)
+               select-position
+               (format-board board-state-5)
+               select-position
+               (format-board board-state-6)
+               end-game"\n")
+          output)))
+
+    (it "tests a Human VS Computer game"
+        (let [output (with-out-str (with-in-str "h\nc\n2\n5\n8" (start-game)))
+              board-state-1 (create-board)
+              board-state-2 (set-position board-state-1 0 "O")
+              board-state-3 (set-position board-state-2 2 "X")
+              board-state-4 (set-position board-state-3 1 "O")
+              board-state-5 (set-position board-state-4 5 "X")
+              board-state-6 (set-position board-state-5 3 "O")
+              board-state-7 (set-position board-state-6 8 "X")]
+          (should=
+            (str select-opponent
+                 select-opponent
+                 (format-board numbered-board)
+                 (format-board board-state-1)
+                 (format-board board-state-2)
+                 select-position
+                 (format-board board-state-3)
+                 (format-board board-state-4)
+                 select-position
+                 (format-board board-state-5)
+                 (format-board board-state-6)
+                 select-position
+                 (format-board board-state-7)
+                 end-game"\n")
+            output)))
+
+    (it "tests a Computer VS Human game"
+        (let [output (with-out-str (with-in-str "c\nh\n2\n5\n8" (start-game)))
+              board-state-1 (create-board)
+              board-state-2 (set-position board-state-1 2 "O")
+              board-state-3 (set-position board-state-2 0 "X")
+              board-state-4 (set-position board-state-3 5 "O")
+              board-state-5 (set-position board-state-4 1 "X")
+              board-state-6 (set-position board-state-5 8 "O")]
+          (should=
+            (str select-opponent
+                 select-opponent
+                 (format-board numbered-board)
+                 (format-board board-state-1)
+                 select-position
+                 (format-board board-state-2)
+                 (format-board board-state-3)
+                 select-position
+                 (format-board board-state-4)
+                 (format-board board-state-5)
+                 select-position
+                 (format-board board-state-6)
+                 end-game"\n")
+            output)))
+
+    (it "tests a Computer VS Computer game"
+        (let [output (with-out-str (with-in-str "c\nc\n" (start-game)))
+              board-state-1 (create-board)
+              board-state-2 (set-position board-state-1 0 "O")
+              board-state-3 (set-position board-state-2 1 "X")
+              board-state-4 (set-position board-state-3 2 "O")
+              board-state-5 (set-position board-state-4 3 "X")
+              board-state-6 (set-position board-state-5 4 "O")
+              board-state-7 (set-position board-state-6 5 "X")
+              board-state-8 (set-position board-state-7 6 "O")]
+          (should=
+            (str select-opponent
+                 select-opponent
+                 (format-board numbered-board)
+                 (format-board board-state-1)
+                 (format-board board-state-2)
+                 (format-board board-state-3)
+                 (format-board board-state-4)
+                 (format-board board-state-5)
+                 (format-board board-state-6)
+                 (format-board board-state-7)
+                 (format-board board-state-8)
+                 end-game"\n")
+            output))))
