@@ -24,6 +24,7 @@
 (defn get-human-position []
   (Integer/parseInt (prompt-user select-position)))
 
+; Not in use currently - might be needed in the future
 ;(defn get-computer-position [board randomiser]
 ;  (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
 
