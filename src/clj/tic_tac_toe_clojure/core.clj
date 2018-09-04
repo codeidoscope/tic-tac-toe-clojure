@@ -16,11 +16,6 @@
 (defn display-board [board]
   (print (format-board board)))
 
-;(defn get-player-type []
-; (do (print "Please select an opponent (H for human or C for computer): ") (flush) (read-line)))
-
-(def symbol-prompt "Please choose a symbol (X or O): ")
-
 (def select-position "Please choose a position between 0 and 8: ")
 
 (defn prompt-user [prompt]

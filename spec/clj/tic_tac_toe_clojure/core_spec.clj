@@ -40,7 +40,6 @@
         (format-board numbered-board))))
 
 (describe "A game"
-;          (with-stubs)
   (it "prompts a player to pick a symbol"
       (should=
         "Y"
@@ -50,11 +49,6 @@
       (should=
        1
         (with-in-str "1" (get-human-position))))
-
-  (it "prompts a player to select a player type"
-      (should=
-        "C"
-        (with-in-str "C" (get-player-type))))
 
 ;  (it "picks a random empty position for a computer"
 ;      (should=
@@ -70,12 +64,6 @@
       (should=
         1
         (with-in-str "1" (get-player-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] "h"))))
-
-  ;(it "gets the player position if player is computer"
-  ;    (with-redefs 
-  ;      [get-computer-position (stub :get-computer-position)
-  ;                  (get-player-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] "c")
-  ;                  (should-have-invoked :get-computer-position {:with [:board :randomiser]})]))
 
    (it "swaps a human player's type"
        (should=
