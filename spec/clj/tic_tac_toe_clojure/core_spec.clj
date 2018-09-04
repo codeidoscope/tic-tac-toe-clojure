@@ -34,13 +34,14 @@
         (should= "Please select an opponent (H for human or C for computer): c\nPlease choose a symbol (X or O): 012\n345\n678\n___\n___\n___\nX__\n___\n___\nPlease choose a position between 0 and 8: X_O\n___\n___\nXXO\n___\n___\nPlease choose a position between 0 and 8: XXO\n__O\n___\nXXO\nX_O\n___\nPlease choose a position between 0 and 8: XXO\nX_O\n__O\nGame is over\n"
                  output)))
   
-  (it "is displayed on three lines"
+  (it "is displayed on three lines with separators when empty"
       (should=
-        "___\n___\n___\n"
-        (format-board (create-board)))
+        "_ | _ | _\n---------\n_ | _ | _\n---------\n_ | _ | _\n---------\n"
+        (format-board (create-board))))
 
+  (it "is displayed on three lines with separators when numbered"
       (should=
-        "012\n345\n678\n"
+        "0 | 1 | 2\n---------\n3 | 4 | 5\n---------\n6 | 7 | 8\n---------\n"
         (format-board numbered-board))))
 
 (describe "A game"

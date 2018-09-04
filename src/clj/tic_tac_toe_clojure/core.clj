@@ -11,7 +11,7 @@
   ["0" "1" "2" "3" "4" "5" "6" "7" "8"])
 
 (defn format-board [board]
-  (with-out-str (println (string/join "\n" (re-seq #".{1,3}" (apply str board))))))
+  (apply str (flatten (for [part (partition 3 board)] (flatten (map vector part '(" | " " | " "\n---------\n")))))))
 
 (defn display-board [board]
   (print (format-board board)))
