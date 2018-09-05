@@ -31,24 +31,9 @@
 (defn get-first-available-position [board]
   (get (first (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
 
-(defn get-player-position [board player-type]
-  (if (= "h" player-type) (get-human-position) (get-first-available-position board)))
-
 (def set-position assoc)
 
 (def select-opponent "Please select an opponent (H for human or C for computer): ")
-
-(defn get-game-type [opponent]
-  (with-out-str(print opponent)))
-
-(defn swap-type [player-type]
-  (if (= "h" player-type) "c" "h"))
-
-(defn swap-player-type [game-type player-type]
-  (if (="h" game-type) "h" (swap-type player-type)))
-
-(defn swap-player-symbol [player-symbol]
-  (if (= "X" player-symbol) "O" "X"))
 
 (defn get-rows [board]
   (partition 3 board))

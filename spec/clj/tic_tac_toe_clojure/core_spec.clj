@@ -59,32 +59,7 @@
   (it "picks the first available position for a computer"
       (should=
         1
-        (get-first-available-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"])))
-
-  (it "gets the player position if player is human"
-      (should=
-        1
-        (with-in-str "1" (get-player-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] "h"))))
-
-   (it "swaps a human player's type"
-       (should=
-         "c"
-         (swap-player-type "c" "h")))
-
-   (it "swaps a computer player's type"
-       (should=
-         "h"
-         (swap-player-type "c" "c")))
-
-  (it "swaps a player's nought symbol"
-      (should=
-        "X"
-        (swap-player-symbol "O")))
-
-  (it "swaps a player's cross symbol"
-     (should=
-       "X"
-       (swap-player-symbol "O"))))
+        (get-first-available-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"]))))
 
 (describe "A decision engine"
   (it "gets the rows from a board"
