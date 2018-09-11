@@ -227,3 +227,15 @@
                  (format-board board-state-8)
                  end-game"\n")
             output))))
+
+  (describe "Minimax"
+   (it "occupies the last free spot on the board"
+    (should= 8
+      (return-position ["O" "X" "X"
+                        "O" "O" "X"
+                        "X" "O" "_"] "X" "O")))
+  (it "returns a winning spot on the board"
+    (should= 8
+      (return-position ["O" "X" "X"
+                        "O" "O" "X"
+                        "X" "_" "_"] "X" "O"))))

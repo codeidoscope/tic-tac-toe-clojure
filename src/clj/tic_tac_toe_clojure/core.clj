@@ -28,6 +28,9 @@
 ;(defn get-computer-position [board randomiser]
 ;  (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
 
+(defn find-empty-spots [board]
+  (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
+
 (defn get-first-available-position [board]
   (get (first (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
 
@@ -64,6 +67,17 @@
 
 (defn game-over? [board]
   (if (or (three-aligned? board) (board-full? board)) true false))
+(defn return-free-cells [board current-player opponent]
+  (let [empty-spots (find-empty-spots board)]
+    (if (> (count empty-spots) 1)
+     (let [scored-positions (for [spot empty-spots]
+       (return-free-cells (set-position board (first spot) current-player) opponent current-player))]
+     (first (filter (fn [tuple] (last tuple)) scored-positions)))
+     (let [position (first (first empty-spots))]
+       [position (three-aligned? (set-position board position current-player) current-player)]))))
+
+(defn return-position [board current-player opponent]
+  (first (return-free-cells board current-player opponent)))
 
 (defprotocol Player
   (get-symbol [this])
