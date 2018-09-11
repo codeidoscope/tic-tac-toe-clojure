@@ -39,27 +39,22 @@
         "0 | 1 | 2\n---------\n3 | 4 | 5\n---------\n6 | 7 | 8\n---------\n"
         (format-board numbered-board))))
 
-(describe "A game"
+(describe "A UI"
   (it "prompts a player to pick a symbol"
       (should=
         "Y"
-       (with-in-str "Y" (prompt-user "fake prompt"))))
+       (with-in-str "Y" (prompt-user "Fake prompt "))))
 
   (it "prompts a human player to pick a position on the board"
       (should=
        1
-        (with-in-str "1" (get-human-position))))
+        (with-in-str "1" (get-human-position)))))
 
 ; Not in use currently - might be needed in the future
 ;  (it "picks a random empty position for a computer"
 ;      (should=
 ;        3
 ;        (get-computer-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] (fn [_] [3 "O"]))))
-
-  (it "picks the first available position for a computer"
-      (should=
-        1
-        (get-first-available-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"]))))
 
 (describe "A decision engine"
   (it "gets the rows from a board"
@@ -124,6 +119,11 @@
         (game-over? ["X" "O" "X"
                      "O" "X" "O"
                      "X" "O" "X"] "X")))
+                     
+ (it "picks the first available position for a computer"
+     (should=
+       1
+       (get-first-available-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"]))))
 
 (describe "A game"
 
