@@ -1,4 +1,6 @@
-(ns tic-tac-toe-clojure.core-spec (:require [speclj.core :refer :all] [tic-tac-toe-clojure.core :refer :all]))
+(ns tic-tac-toe-clojure.core-spec
+  (:require [speclj.core :refer :all]
+            [tic-tac-toe-clojure.core :refer :all]))
 
 (describe "A board"
   (it "has 9 cells"
@@ -119,7 +121,7 @@
         (game-over? ["X" "O" "X"
                      "O" "X" "O"
                      "X" "O" "X"] "X")))
-                     
+
  (it "picks the first available position for a computer"
      (should=
        1
@@ -234,8 +236,15 @@
       (return-position ["O" "X" "X"
                         "O" "O" "X"
                         "X" "O" "_"] "X" "O")))
-  (it "returns a winning spot on the board"
+
+  (it "returns a winning position for player X on the board"
     (should= 8
       (return-position ["O" "X" "X"
                         "O" "O" "X"
-                        "X" "_" "_"] "X" "O"))))
+                        "X" "_" "_"] "X" "O")))
+
+  (it "returns a winning position for player X when there are three spots left"
+    (should= 8
+      (return-position ["O" "X" "_"
+                        "O" "O" "_"
+                        "X" "X" "_"] "X" "O"))))

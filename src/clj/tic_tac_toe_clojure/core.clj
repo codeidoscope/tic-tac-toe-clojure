@@ -71,11 +71,12 @@
 (defn return-free-cells [board current-player opponent]
   (let [empty-spots (find-empty-spots board)]
     (if (> (count empty-spots) 1)
-     (let [scored-positions (for [spot empty-spots]
+     (let [positions (for [spot empty-spots]
        (return-free-cells (set-position board (first spot) current-player) opponent current-player))]
-     (first (filter (fn [tuple] (last tuple)) scored-positions)))
-     (let [position (first (first empty-spots))]
-       [position (three-aligned? (set-position board position current-player) current-player)]))))
+       ; The following line returns the last element of the list of positions
+     (first (filter (fn [tuple] (first tuple)) positions)))
+     (let [position-index (first (first empty-spots))]
+       [position-index (three-aligned? (set-position board position-index current-player) current-player)]))))
 
 (defn return-position [board current-player opponent]
   (first (return-free-cells board current-player opponent)))
