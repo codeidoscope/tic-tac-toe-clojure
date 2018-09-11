@@ -32,7 +32,7 @@
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
 
 (defn get-first-available-position [board]
-  (get (first (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
+  (get (first (find-empty-spots board)) 0))
 
 (def set-position assoc)
 
@@ -54,19 +54,20 @@
 (defn join-sections [board]
   (concat (get-rows board) (concat (get-columns board)) (concat(get-diagonals board))))
 
-(defn symbols-equal? [section]
-  (and (= (nth section 0) (nth section 1) (nth section 2)) (not= (apply str section) "___")))
+(defn symbols-equal? [section symbol]
+  (and (= (nth section 0) (nth section 1) (nth section 2) symbol) (not= (apply str section) "___")))
 
-(defn three-aligned? [board]
-  (some true? (for [section (join-sections board)] (symbols-equal? section))))
+(defn three-aligned? [board symbol]
+  (some true? (for [section (join-sections board)] (symbols-equal? section symbol))))
 
 (defn board-full? [board]
   (if (some #{"_"} board) false true))
 
 (def end-game "Game is over")
 
-(defn game-over? [board]
-  (if (or (three-aligned? board) (board-full? board)) true false))
+(defn game-over? [board symbol]
+  (if (or (three-aligned? board symbol) (board-full? board)) true false))
+
 (defn return-free-cells [board current-player opponent]
   (let [empty-spots (find-empty-spots board)]
     (if (> (count empty-spots) 1)
@@ -97,7 +98,7 @@
 
 (defn next-player-turn [board current-player other-player]
   (display-board board)
-  (if (game-over? board)
+  (if (game-over? board (get-symbol other-player))
     (println end-game)
     (recur
       (set-position board

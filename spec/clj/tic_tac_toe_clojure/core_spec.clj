@@ -97,7 +97,7 @@
         true
         (three-aligned? ["X" "_" "O"
                          "_" "X" "_"
-                         "O" "_" "X"])))
+                         "O" "_" "X"] "X")))
 
   (it "returns true if a board is full"
       (should=
@@ -116,14 +116,14 @@
   (it "returns true if the game is over because three symbols are aligned"
       (should=
         true
-        (game-over? (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O"))))
+        (game-over? (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O") "X")))
 
   (it "returns true if the game is over because the board is full"
       (should=
         true
         (game-over? ["X" "O" "X"
                      "O" "X" "O"
-                     "X" "O" "X"]))))
+                     "X" "O" "X"] "X")))
 
 (describe "A game"
 
