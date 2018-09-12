@@ -275,6 +275,11 @@
                        "O" "O" "_"
                        "X" "_" "_"] 5 "X" "O"))))
   (it "returns a score of zero if the game is a draw"
+   (it "returns a score of zero if the game is a draw"
+    (should= 0
+      (score-move ["X" "X" "O"
+                         "O" "O" "X"
+                         "X" "O" "_"] "X" "O" 8)))
    (should= true
      (is-draw? ["X" "X" "O"
                 "O" "O" "X"
