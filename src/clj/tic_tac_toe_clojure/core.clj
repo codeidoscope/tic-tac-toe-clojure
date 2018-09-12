@@ -69,7 +69,11 @@
   (if (or (three-aligned? board symbol) (board-full? board)) true false))
 
 (defn score-position [board position player]
-  (if (three-aligned? (set-position board position player) player) 10 (-10)))
+  (if (three-aligned? (set-position board position player) player) 10 -10))
+
+(defn block-opponent [board position current-player opponent]
+  (if (three-aligned? (set-position board position opponent) opponent)
+    (set-position board position current-player)))
 
 (defn return-position-scores [board current-player opponent]
   (let [empty-spots (find-empty-spots board)]

@@ -259,4 +259,18 @@
     (should= 10
       (return-score-position ["O" "X" "X"
                               "O" "O" "X"
-                              "X" "O" "_"] "X" "O"))))
+                              "X" "O" "_"] "X" "O")))
+
+  (it "returns a negative score when no winning position is available"
+    (should= -10
+      (return-score-position ["O" "X" "O"
+                              "O" "X" "X"
+                              "X" "O" "_"] "X" "O")))
+
+  (it "blocks an opponent about to win"
+    (should= ["X" "_" "_"
+              "O" "O" "X"
+              "X" "_" "_"]
+      (block-opponent ["X" "_" "_"
+                       "O" "O" "_"
+                       "X" "_" "_"] 5 "X" "O"))))
