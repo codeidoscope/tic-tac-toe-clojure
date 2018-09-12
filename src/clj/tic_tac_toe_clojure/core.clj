@@ -78,7 +78,7 @@
   (cond
     (is-draw? board position current-player opponent) 0
     (three-aligned? board current-player) 10
-    :else (-10)))
+    (three-aligned? board opponent) -10))
 
 (defn block-opponent [board position current-player opponent]
   (if (three-aligned? (set-position board position opponent) opponent)

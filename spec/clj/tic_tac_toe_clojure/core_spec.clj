@@ -261,8 +261,12 @@
                               "O" "O" "X"
                               "X" "O" "_"] "X" "O")))
 
-  (it "returns a negative score when no winning position is available"
+  (it "returns a negative score when the opponent is in a winning position"
     (should= -10
+      (return-score-position ["O" "X" "O"
+                              "O" "X" "X"
+                              "O" "O" "_"] "X" "O")))
+
   (it "returns 0 when the game is a draw"
     (should= 0
       (return-score-position ["O" "X" "O"
