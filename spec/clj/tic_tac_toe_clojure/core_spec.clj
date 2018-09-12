@@ -280,7 +280,7 @@
     (should= 0
       (score-move ["X" "X" "O"
                          "O" "O" "X"
-                         "X" "O" "_"] "X" "O" 8)))
+                         "X" "O" "_"] "X" "O" :position 8)))
 
   (it "returns true if the game is a draw"
    (should= true

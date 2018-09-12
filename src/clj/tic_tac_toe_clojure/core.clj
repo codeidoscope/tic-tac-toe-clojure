@@ -75,7 +75,8 @@
 (defn score-position [board position player]
   (if (three-aligned? (set-position board position player) player) 10 -10))
 
-(defn score-move [board current-player opponent position]
+(defn score-move [board current-player opponent & {:keys [position]
+                                                   :or {position nil}}]
   (cond
     (is-draw? board position current-player opponent) 0
     (three-aligned? board current-player) 10
