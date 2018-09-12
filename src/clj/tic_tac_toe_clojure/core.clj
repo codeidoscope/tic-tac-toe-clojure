@@ -63,6 +63,10 @@
 (defn board-full? [board]
   (if (some #{"_"} board) false true))
 
+(defn is-draw? [board position current-player opponent]
+  (if-not (three-aligned? (set-position board position opponent) opponent) true false))
+
+
 (def end-game "Game is over")
 
 (defn game-over? [board symbol]

@@ -274,3 +274,8 @@
       (block-opponent ["X" "_" "_"
                        "O" "O" "_"
                        "X" "_" "_"] 5 "X" "O"))))
+  (it "returns a score of zero if the game is a draw"
+   (should= true
+     (is-draw? ["X" "X" "O"
+                "O" "O" "X"
+                "X" "O" "_"] 8 "X" "O"))))
