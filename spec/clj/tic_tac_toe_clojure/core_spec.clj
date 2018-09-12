@@ -263,6 +263,8 @@
 
   (it "returns a negative score when no winning position is available"
     (should= -10
+  (it "returns 0 when the game is a draw"
+    (should= 0
       (return-score-position ["O" "X" "O"
                               "O" "X" "X"
                               "X" "O" "_"] "X" "O")))
@@ -274,7 +276,6 @@
       (block-opponent ["X" "_" "_"
                        "O" "O" "_"
                        "X" "_" "_"] 5 "X" "O")))
-
 
    (it "returns a score of zero if the game is a draw"
     (should= 0
