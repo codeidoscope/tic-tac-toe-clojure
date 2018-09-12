@@ -247,4 +247,16 @@
     (should= 8
       (return-position ["O" "X" "_"
                         "O" "O" "_"
-                        "X" "X" "_"] "X" "O"))))
+                        "X" "X" "_"] "X" "O")))
+
+  ; (it "returns a winning position for player X when there are more than one move left"
+  ;   (should= 4
+  ;     (return-position ["O" "X" "_"
+  ;                       "O" "_" "_"
+  ;                       "X" "X" "_"] "O" "X")))
+
+  (it "returns a positive score when a winning position is available"
+    (should= 10
+      (return-score-position ["O" "X" "X"
+                              "O" "O" "X"
+                              "X" "O" "_"] "X" "O"))))
