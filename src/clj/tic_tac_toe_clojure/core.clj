@@ -72,8 +72,6 @@
 (defn game-over? [board symbol]
   (if (or (three-aligned? board symbol) (board-full? board)) true false))
 
-(defn score-position [board position player]
-  (if (three-aligned? (set-position board position player) player) 10 -10))
 
 (defn score-move [board current-player opponent & {:keys [position]
                                                    :or {position nil}}]
@@ -93,7 +91,7 @@
        (return-position-scores (set-position board (first spot) current-player) opponent current-player))]
      (first (filter (fn [tuple] (last tuple)) positions)))
      (let [position-index (first (first empty-spots))]
-       (score-position (set-position board position-index current-player) position-index current-player)))))
+       (score-move (set-position board position-index current-player) current-player opponent :position position-index)))))
 
 (defn return-free-cells [board current-player opponent]
   (let [empty-spots (find-empty-spots board)]
