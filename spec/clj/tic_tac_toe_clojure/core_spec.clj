@@ -281,11 +281,11 @@
                        "O" "O" "_"
                        "X" "_" "_"] 5 "X" "O")))
 
-   (it "returns a score of zero if the game is a draw"
-    (should= 0
-      (score-move ["X" "X" "O"
-                         "O" "O" "X"
-                         "X" "O" "_"] "X" "O" :position 8)))
+ (it "returns a score of zero if the game is a draw"
+  (should= 0
+    (score-move ["X" "X" "O"
+                 "O" "O" "X"
+                 "X" "O" "_"] "X" "O" :position 8)))
 
   (it "returns true if the game is a draw"
    (should= true
