@@ -255,20 +255,20 @@
   ;                       "O" "_" "_"
   ;                       "X" "X" "_"] "O" "X")))
 
-  (it "returns a positive score when a winning position is available"
-    (should= 10
+  (it "returns a position and positive score when a winning position is available"
+    (should= [8 10]
       (return-score-position ["O" "X" "X"
                               "O" "O" "X"
                               "X" "O" "_"] "X" "O")))
 
-  (it "returns a negative score when the opponent is in a winning position"
-    (should= -10
+  (it "returns a position and negative score when the opponent is in a winning position"
+    (should= [8 -10]
       (return-score-position ["O" "X" "O"
                               "O" "X" "X"
                               "O" "O" "_"] "X" "O")))
 
-  (it "returns 0 when the game is a draw"
-    (should= 0
+  (it "returns a position and 0 when the game is a draw"
+    (should= [8 0]
       (return-score-position ["O" "X" "O"
                               "O" "X" "X"
                               "X" "O" "_"] "X" "O")))

@@ -91,7 +91,7 @@
        (return-position-scores (set-position board (first spot) current-player) opponent current-player))]
      (first (filter (fn [tuple] (last tuple)) positions)))
      (let [position-index (first (first empty-spots))]
-       (score-move (set-position board position-index current-player) current-player opponent :position position-index)))))
+       [position-index  (score-move (set-position board position-index current-player) current-player opponent :position position-index)]))))
 
 (defn return-free-cells [board current-player opponent]
   (let [empty-spots (find-empty-spots board)]
