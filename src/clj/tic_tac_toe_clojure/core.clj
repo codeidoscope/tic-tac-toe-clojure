@@ -72,6 +72,8 @@
 (defn game-over? [board symbol]
   (if (or (three-aligned? board symbol) (board-full? board)) true false))
 
+(defn calculate-score [score depth]
+  (/ score depth))
 
 (defn score-move [board current-player opponent & {:keys [position]
                                                    :or {position nil}}]

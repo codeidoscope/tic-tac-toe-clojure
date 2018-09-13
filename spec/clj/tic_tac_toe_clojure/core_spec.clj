@@ -291,4 +291,17 @@
    (should= true
      (is-draw? ["X" "X" "O"
                 "O" "O" "X"
-                "X" "O" "_"] 8 "X" "O"))))
+                "X" "O" "_"] 8 "X" "O")))
+
+  (it "returns a positive score for a win with a depth of two"
+   (should= 5
+     (calculate-score 10 2)))
+
+  (it "returns a negative score for a loss with a depth of two"
+   (should= -5
+     (calculate-score -10 2)))
+
+  (it "returns a neutral score for a draw with a depth of two"
+   (should= 0
+     (calculate-score 0 2)))
+                )
