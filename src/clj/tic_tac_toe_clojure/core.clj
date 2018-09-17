@@ -86,10 +86,13 @@
 
 
 (defn return-position-scores [board current-player opponent]
+(def depth 0)
+
+(defn return-position-scores [board current-player opponent depth]
   (let [empty-spots (find-empty-spots board)]
     (if (> (count empty-spots) 1)
      (let [positions (for [spot empty-spots]
-       (return-position-scores (set-position board (first spot) current-player) opponent current-player))]
+       (return-position-scores (set-position board (first spot) current-player) opponent current-player (+ 1 depth)))]
      (first (filter (fn [tuple] (last tuple)) positions)))
      (let [position-index (first (first empty-spots))]
        [position-index  (score-move (set-position board position-index current-player) current-player opponent)]))))
@@ -107,8 +110,8 @@
 (defn return-position [board current-player opponent]
   (first (return-free-cells board current-player opponent)))
 
-(defn return-score-position [board current-player opponent]
-  (return-position-scores board current-player opponent))
+(defn return-score-position [board current-player opponent depth]
+  (return-position-scores board current-player opponent depth))
 
 (defprotocol Player
   (get-symbol [this])

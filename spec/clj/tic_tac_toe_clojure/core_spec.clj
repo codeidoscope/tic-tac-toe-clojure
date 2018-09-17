@@ -259,19 +259,25 @@
     (should= [8 10]
       (return-score-position ["O" "X" "X"
                               "O" "O" "X"
-                              "X" "O" "_"] "X" "O")))
+                              "X" "O" "_"] "X" "O" 0)))
 
   (it "returns a position and negative score when the opponent is in a winning position"
     (should= [8 -10]
       (return-score-position ["O" "X" "O"
                               "O" "X" "X"
-                              "O" "O" "_"] "X" "O")))
+                              "O" "O" "_"] "X" "O" 0)))
+
+  (it "returns something when something happens"
+    (should= [5 10]
+      (return-score-position ["_" "O" "X"
+                              "_" "_" "_"
+                              "_" "_" "X"] "X" "O" 5)))
 
   (it "returns a position and 0 when the game is a draw"
     (should= [8 0]
       (return-score-position ["O" "X" "O"
                               "O" "X" "X"
-                              "X" "O" "_"] "X" "O")))
+                              "X" "O" "_"] "X" "O" 0)))
 
  (it "returns a score of 10 if the game is a win"
   (should= 10
