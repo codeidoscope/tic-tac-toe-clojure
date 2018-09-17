@@ -231,53 +231,41 @@
             output))))
 
   (describe "Minimax"
-   (it "occupies the last free spot on the board"
-    (should= 8
-      (return-position ["O" "X" "X"
-                        "O" "O" "X"
-                        "X" "O" "_"] "X" "O")))
-
   (it "returns a winning position for player X on the board"
     (should= 8
-      (return-position ["O" "X" "X"
-                        "O" "O" "X"
-                        "X" "_" "_"] "X" "O")))
+      (get-computer-position ["O" "_" "X"
+                              "O" "_" "X"
+                              "X" "_" "_"] "X" "O" 6)))
 
   (it "returns a winning position for player X when there are three spots left"
-    (should= 8
-      (return-position ["O" "X" "_"
-                        "O" "O" "_"
-                        "X" "X" "_"] "X" "O")))
-
-  ; (it "returns a winning position for player X when there are more than one move left"
-  ;   (should= 4
-  ;     (return-position ["O" "X" "_"
-  ;                       "O" "_" "_"
-  ;                       "X" "X" "_"] "O" "X")))
+    (should= 6
+      (get-computer-position ["O" "X" "_"
+                              "O" "O" "_"
+                              "_" "X" "X"] "X" "O" 7)))
 
   (it "returns a position and positive score when a winning position is available"
-    (should= [8 10]
-      (return-score-position ["O" "X" "X"
+    (should= 8
+      (get-computer-position ["O" "X" "X"
                               "O" "O" "X"
-                              "X" "O" "_"] "X" "O" 0)))
+                              "X" "O" "_"] "X" "O" 8)))
 
   (it "returns a position and negative score when the opponent is in a winning position"
-    (should= [8 -10]
-      (return-score-position ["O" "X" "O"
+    (should= 8
+      (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "O" "O" "_"] "X" "O" 0)))
+                              "O" "O" "_"] "X" "O" 8)))
 
-  (it "returns something when something happens"
-    (should= [5 10]
-      (return-score-position ["_" "O" "X"
-                              "_" "_" "_"
-                              "_" "_" "X"] "X" "O" 5)))
+  ; (it "returns something when something happens"
+  ;   (should= [5 10]
+  ;     (get-computer-position ["_" "O" "X"
+  ;                             "_" "_" "_"
+  ;                             "_" "_" "X"] "X" "O" 5  max -10)))
 
   (it "returns a position and 0 when the game is a draw"
-    (should= [8 0]
-      (return-score-position ["O" "X" "O"
+    (should= 8
+      (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "X" "O" "_"] "X" "O" 0)))
+                              "X" "O" "_"] "X" "O" 8)))
 
  (it "returns a score of 10 if the game is a win"
   (should= 10
