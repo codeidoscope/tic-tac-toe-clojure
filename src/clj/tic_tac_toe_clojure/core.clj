@@ -77,6 +77,12 @@
 (defn calculate-score [score depth]
   (/ score depth))
 
+(def maximising-value -10)
+
+(def minimising-value 10)
+
+(defn return-evaluated-score [evaluator value board current-player opponent depth]
+  (evaluator value (calculate-score (score-move board current-player opponent) depth)))
 
 
 (defn return-position-scores [board current-player opponent]

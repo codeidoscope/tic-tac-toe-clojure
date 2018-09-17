@@ -302,4 +302,28 @@
   (it "returns a neutral score for a draw with a depth of two"
    (should= 0
      (calculate-score 0 2)))
+
+  (it "picks the highest score for a maximising player when there is a winning position"
+    (should= 10
+      (return-evaluated-score max -10 ["X" "_" "O"
+                                       "_" "X" "O"
+                                       "_" "_" "X"] "X" "O" 1)))
+
+  (it "picks the highest score for a maximising player when there is no winning position"
+    (should= 0
+      (return-evaluated-score max -10 ["X" "_" "O"
+                                       "_" "X" "O"
+                                       "_" "_" "_"] "X" "O" 1)))
+
+  (it "picks the highest score for a minimising player when there is a blocking position"
+    (should= 0
+      (return-evaluated-score min 10 ["O" "_" "X"
+                                      "X" "X" "O"
+                                      "O" "_" "_"] "O" "X" 1)))
+
+ (it "picks the highest score for a minimising player when there is a winning position"
+   (should= 5
+     (return-evaluated-score min 10 ["O" "_" "X"
+                                     "O" "X" "O"
+                                     "O" "_" "_"] "O" "X" 2)))
                 )
