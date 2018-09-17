@@ -303,6 +303,18 @@
    (should= 0
      (calculate-score 0 2)))
 
+ (it "returns a positive score when the depth is 0"
+  (should= 10
+    (calculate-score 10 0)))
+
+(it "returns a negative score when the depth is 0"
+ (should= -10
+   (calculate-score -10 0)))
+
+ (it "returns a score of 0 when the depth is 0"
+  (should= 0
+    (calculate-score 0 0)))
+
   (it "picks the highest score for a maximising player when there is a winning position"
     (should= 10
       (return-evaluated-score max -10 ["X" "_" "O"

@@ -75,7 +75,7 @@
     :else 0))
 
 (defn calculate-score [score depth]
-  (/ score depth))
+  (if (= 0 depth) score (/ score depth)))
 
 (def maximising-value -10)
 
