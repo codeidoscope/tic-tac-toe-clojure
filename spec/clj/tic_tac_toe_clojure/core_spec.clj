@@ -273,12 +273,23 @@
                               "O" "X" "X"
                               "X" "O" "_"] "X" "O")))
 
+ (it "returns a score of 10 if the game is a win"
+  (should= 10
+    (score-move ["X" "_" "_"
+                 "X" "O" "O"
+                 "X" "_" "_"] "X" "O")))
+
+ (it "returns a score of -10 if the game is a loss"
+  (should= -10
+    (score-move ["X" "_" "_"
+                 "O" "O" "O"
+                 "X" "_" "_"] "X" "O")))
+
  (it "returns a score of zero if the game is a draw"
   (should= 0
     (score-move ["X" "X" "O"
                  "O" "O" "X"
-                 "X" "O" "_"] "X" "O" :position 8)))
-
+                 "X" "O" "_"] "X" "O")))
 
   (it "returns a positive score for a win with a depth of two"
    (should= 5
