@@ -81,9 +81,6 @@
     (three-aligned? board current-player) 10
     (three-aligned? board opponent) -10))
 
-(defn block-opponent [board position current-player opponent]
-  (if (three-aligned? (set-position board position opponent) opponent)
-    (set-position board position current-player)))
 
 (defn return-position-scores [board current-player opponent]
   (let [empty-spots (find-empty-spots board)]
