@@ -105,19 +105,19 @@
 
 (defprotocol Player
   (get-symbol [this])
-  (get-move [this board]))
+  (get-move [this board opponent]))
 
 (deftype HumanPlayer [symbol]
   Player
   (get-symbol [this] symbol)
-  (get-move [this board]
+  (get-move [this board opponent]
     (get-human-position)))
 
 (deftype ComputerPlayer [symbol]
   Player
   (get-symbol [this] symbol)
-  (get-move [this board]
-    (get-first-available-position board)))
+  (get-move [this board opponent]
+    (get-computer-position board this opponent)))
 
 (defn next-player-turn [board current-player opponent]
   (display-board board)
@@ -125,7 +125,7 @@
     (println end-game)
     (recur
       (set-position board
-                    (get-move current-player board)
+                    (get-move current-player board opponent)
                     (get-symbol current-player))
       opponent
       current-player)))
