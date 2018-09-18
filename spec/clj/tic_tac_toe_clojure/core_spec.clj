@@ -235,25 +235,25 @@
     (should= 8
       (get-computer-position ["O" "_" "X"
                               "O" "_" "X"
-                              "X" "_" "_"] "X" "O" 6)))
+                              "X" "_" "_"] "X" "O")))
 
   (it "returns a winning position for player X when there are three spots left"
     (should= 6
       (get-computer-position ["O" "X" "_"
                               "O" "O" "_"
-                              "_" "X" "X"] "X" "O" 7)))
+                              "_" "X" "X"] "X" "O")))
 
   (it "returns a position and positive score when a winning position is available"
     (should= 8
       (get-computer-position ["O" "X" "X"
                               "O" "O" "X"
-                              "X" "O" "_"] "X" "O" 8)))
+                              "X" "O" "_"] "X" "O")))
 
   (it "returns a position and negative score when the opponent is in a winning position"
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "O" "O" "_"] "X" "O" 8)))
+                              "O" "O" "_"] "X" "O")))
 
   ; (it "returns something when something happens"
   ;   (should= [5 10]
@@ -265,7 +265,7 @@
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "X" "O" "_"] "X" "O" 8)))
+                              "X" "O" "_"] "X" "O")))
 
  (it "returns a score of 10 if the game is a win"
   (should= 10

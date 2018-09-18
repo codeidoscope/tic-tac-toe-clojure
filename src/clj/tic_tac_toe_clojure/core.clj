@@ -100,7 +100,7 @@
                                                opponent
                                                depth)]))))
 
-(defn get-computer-position [board current-player opponent depth]
+(defn get-computer-position [board current-player opponent]
   (first (minimax board current-player opponent depth max maximising-value)))
 
 (defprotocol Player
@@ -119,15 +119,15 @@
   (get-move [this board]
     (get-first-available-position board)))
 
-(defn next-player-turn [board current-player other-player]
+(defn next-player-turn [board current-player opponent]
   (display-board board)
-  (if (game-over? board (get-symbol other-player))
+  (if (game-over? board (get-symbol opponent))
     (println end-game)
     (recur
       (set-position board
                     (get-move current-player board)
                     (get-symbol current-player))
-      other-player
+      opponent
       current-player)))
 
 (defn get-player [marker]
