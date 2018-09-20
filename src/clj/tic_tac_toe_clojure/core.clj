@@ -83,6 +83,11 @@
 
 (defn return-evaluated-score [evaluator value board current-player opponent depth]
   (evaluator value (calculate-score (score-move board current-player opponent) depth)))
+(defn score-positions [board current-player opponent depth]
+  (let [spots (remove #{"_"} (flatten (find-empty-spots board)))
+        scores (for [spot (find-empty-spots board)] (get-score (set-position board (first spot) current-player) current-player opponent depth))]
+
+  (zipmap spots scores)))
 
 (def depth 0)
 

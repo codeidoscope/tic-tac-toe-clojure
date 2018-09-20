@@ -333,3 +333,6 @@
                                      "O" "X" "O"
                                      "O" "_" "_"] "O" "X" 2)))
                 )
+(it "returns a hash with positions and scores"
+  (should= {0 5/4, 3 0, 6 0}
+    (score-positions ["_" "X" "X" "_" "O" "O" "_" "X" "O"] "X" "O" 8)))
