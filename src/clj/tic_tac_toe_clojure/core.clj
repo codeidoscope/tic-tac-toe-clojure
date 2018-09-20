@@ -77,36 +77,29 @@
 (defn calculate-score [score depth]
   (if (= 0 depth) score (/ score depth)))
 
-(def maximising-value -10)
+(defn get-score [board current-player opponent depth]
+  (calculate-score (score-move board current-player opponent) depth))
 
-(def minimising-value 10)
-
-(defn return-evaluated-score [evaluator value board current-player opponent depth]
-  (evaluator value (calculate-score (score-move board current-player opponent) depth)))
 (defn score-positions [board current-player opponent depth]
   (let [spots (remove #{"_"} (flatten (find-empty-spots board)))
         scores (for [spot (find-empty-spots board)] (get-score (set-position board (first spot) current-player) current-player opponent depth))]
 
   (zipmap spots scores)))
 
+(defn return-evaluated-score [evaluator scores]
+  (key (apply max-key val scores)))
+
 (def depth 0)
 
-(defn minimax [board current-player opponent depth evaluator value]
+(defn minimax [board current-player opponent depth evaluator]
   (let [empty-spots (find-empty-spots board)]
     (if (> (count empty-spots) 1)
-     (let [positions (for [spot empty-spots]
-       (minimax (set-position board (first spot) current-player) opponent current-player (+ 1 depth) min minimising-value))]
-     (first (filter (fn [tuple] (last tuple)) positions)))
-     (let [position-index (first (first empty-spots))]
-       [position-index (return-evaluated-score evaluator
-                                               value
-                                               (set-position board position-index current-player)
-                                               current-player
-                                               opponent
-                                               depth)]))))
+     (for [spot empty-spots]
+        (minimax (set-position board (first spot) current-player) opponent current-player (inc depth) min-key))
+        (return-evaluated-score evaluator (score-positions board current-player opponent depth)))))
 
 (defn get-computer-position [board current-player opponent]
-  (first (minimax board current-player opponent depth max maximising-value)))
+  (minimax board current-player opponent depth max-key))
 
 (defprotocol Player
   (get-symbol [this])
