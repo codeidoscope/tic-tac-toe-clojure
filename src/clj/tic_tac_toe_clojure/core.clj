@@ -1,4 +1,6 @@
-(ns tic-tac-toe-clojure.core (:require [clojure.string :as string]))
+(ns tic-tac-toe-clojure.core
+  (:require [clojure.string :as string]))
+
 (declare start-game)
 (defn -main [& args]
   (println "Starting game")
@@ -24,15 +26,8 @@
 (defn get-human-position []
   (Integer/parseInt (prompt-user select-position)))
 
-; Not in use currently - might be needed in the future
-;(defn get-computer-position [board randomiser]
-;  (get (randomiser (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board))) 0))
-
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
-
-(defn get-first-available-position [board]
-  (get (first (find-empty-spots board)) 0))
 
 (def set-position assoc)
 
@@ -52,7 +47,7 @@
    (symbols-at board [2 4 6])])
 
 (defn join-sections [board]
-  (concat (get-rows board) (concat (get-columns board)) (concat(get-diagonals board))))
+  (concat (get-rows board) (concat (get-columns board)) (concat (get-diagonals board))))
 
 (defn symbols-equal? [section symbol]
   (and (= (nth section 0) (nth section 1) (nth section 2) symbol) (not= (apply str section) "___")))
@@ -66,7 +61,8 @@
 (def end-game "Game is over")
 
 (defn game-over? [board symbol]
-  (if (or (three-aligned? board symbol) (board-full? board)) true false))
+  (or (three-aligned? board symbol) (board-full? board)))
+
 
 (defn score-move [board current-player opponent]
   (cond
@@ -74,32 +70,11 @@
     (three-aligned? board opponent) -10
     :else 0))
 
-(defn calculate-score [score depth]
-  (if (= 0 depth) score (/ score depth)))
 
-(defn get-score [board current-player opponent depth]
-  (calculate-score (score-move board current-player opponent) depth))
 
-(defn score-positions [board current-player opponent depth]
-  (let [spots (remove #{"_"} (flatten (find-empty-spots board)))
-        scores (for [spot (find-empty-spots board)] (get-score (set-position board (first spot) current-player) current-player opponent depth))]
 
-  (zipmap spots scores)))
-
-(defn return-evaluated-score [evaluator scores]
-  (key (apply max-key val scores)))
-
-(def depth 0)
-
-(defn minimax [board current-player opponent depth evaluator]
-  (let [empty-spots (find-empty-spots board)]
-    (if (> (count empty-spots) 1)
-     (for [spot empty-spots]
-        (minimax (set-position board (first spot) current-player) opponent current-player (inc depth) min-key))
-        (return-evaluated-score evaluator (score-positions board current-player opponent depth)))))
 
 (defn get-computer-position [board current-player opponent]
-  (minimax board current-player opponent depth max-key))
 
 (defprotocol Player
   (get-symbol [this])

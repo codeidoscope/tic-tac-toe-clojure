@@ -4,25 +4,22 @@
 
 (describe "A board"
   (it "has 9 cells"
-      (should=
-        ["_" "_" "_"
-         "_" "_" "_"
-         "_" "_" "_"]
-        (create-board)))
+    (should= ["_" "_" "_"
+              "_" "_" "_"
+              "_" "_" "_"]
+      (create-board)))
 
   (it "sets a X mark at the correct position"
-      (should=
-        ["X" "_" "_"
-         "_" "_" "_"
-         "_" "_" "_"]
-        (set-position (create-board) 0 "X")))
+    (should= ["X" "_" "_"
+              "_" "_" "_"
+              "_" "_" "_"]
+      (set-position (create-board) 0 "X")))
 
   (it "sets an X mark followed by an O mark in the correct positions"
-      (should=
-        ["X" "O" "_"
-         "_" "_" "_"
-         "_" "_" "_"]
-        (set-position (set-position (create-board) 0 "X") 1 "O")))
+    (should= ["X" "O" "_"
+              "_" "_" "_"
+              "_" "_" "_"]
+      (set-position (set-position (create-board) 0 "X") 1 "O")))
 
   (it "sets an O mark in the correct position"
       (should=
@@ -43,92 +40,70 @@
 
 (describe "A UI"
   (it "prompts a player to pick a symbol"
-      (should=
-        "Y"
-       (with-in-str "Y" (prompt-user "Fake prompt "))))
+    (should= "Y"
+      (with-in-str "Y" (prompt-user "Fake prompt "))))
 
   (it "prompts a human player to pick a position on the board"
-      (should=
-       1
-        (with-in-str "1" (get-human-position)))))
-
-; Not in use currently - might be needed in the future
-;  (it "picks a random empty position for a computer"
-;      (should=
-;        3
-;        (get-computer-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"] (fn [_] [3 "O"]))))
+    (should= 1
+      (with-in-str "1" (get-human-position)))))
 
 (describe "A decision engine"
   (it "gets the rows from a board"
-      (should=
-        [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
-        (get-rows ["X" "_" "_"
-                   "O" "_" "_"
-                   "X" "_" "_"])))
+    (should= [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
+      (get-rows ["X" "_" "_"
+                 "O" "_" "_"
+                 "X" "_" "_"])))
 
   (it "gets the columns from a board"
-      (should=
-        [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
-        (get-columns ["X" "O" "X"
-                      "_" "_" "_"
-                      "_" "_" "_"])))
+    (should= [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
+      (get-columns ["X" "O" "X"
+                    "_" "_" "_"
+                    "_" "_" "_"])))
 
   (it "gets the diagonals from a board"
-      (should=
-        [["X" "O" "X"] ["O" "O" "O"]]
+      (should= [["X" "O" "X"] ["O" "O" "O"]]
         (get-diagonals ["X" "_" "O"
                         "_" "O" "_"
                         "O" "_" "X"])))
 
   (it "joins the rows, columns and diagonals"
-     (should=
-       [["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"]
-        ["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"]
-        ["X" "X" "X"] ["O" "X" "O"]]
-       (join-sections ["X" "_" "O"
-                       "_" "X" "_"
-                       "O" "_" "X"])))
+    (should=
+      [["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"]
+       ["X" "_" "O"] ["_" "X" "_"] ["O" "_" "X"]
+       ["X" "X" "X"] ["O" "X" "O"]]
+      (join-sections ["X" "_" "O"
+                      "_" "X" "_"
+                      "O" "_" "X"])))
 
   (it "checks if three symbols are aligned"
-      (should=
-        true
-        (three-aligned? ["X" "_" "O"
-                         "_" "X" "_"
-                         "O" "_" "X"] "X")))
+    (should= true
+      (three-aligned? ["X" "_" "O"
+                       "_" "X" "_"
+                       "O" "_" "X"] "X")))
 
   (it "returns true if a board is full"
-      (should=
-        true
-        (board-full? ["X" "O" "X"
-                      "O" "X" "O"
-                      "X" "O" "X"])))
+    (should= true
+      (board-full? ["X" "O" "X"
+                    "O" "X" "O"
+                    "X" "O" "X"])))
 
   (it "returns false if a board is not full"
-      (should=
-        false
-        (board-full? ["X" "O" "X"
-                      "O" "X" "O"
-                      "X" "O" "_"])))
+    (should= false
+      (board-full? ["X" "O" "X"
+                    "O" "X" "O"
+                    "X" "O" "_"])))
 
   (it "returns true if the game is over because three symbols are aligned"
-      (should=
-        true
-        (game-over? (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O") "X")))
+    (should= true
+      (game-over? (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O") "X")))
 
   (it "returns true if the game is over because the board is full"
-      (should=
-        true
-        (game-over? ["X" "O" "X"
-                     "O" "X" "O"
-                     "X" "O" "X"] "X")))
-
- (it "picks the first available position for a computer"
-     (should=
-       1
-       (get-first-available-position ["X" "_" "O" "_" "X" "_" "X" "_" "O"]))))
+    (should= true
+      (game-over? ["X" "O" "X"
+                   "O" "X" "O"
+                   "X" "O" "X"] "X")))
 
 (describe "A game"
-
   (it "tests a Human VS Human game"
       (let [output (with-out-str (with-in-str "h\nh\n0\n2\n3\n5\n6" (start-game)))
             board-state-1 (create-board)
@@ -230,7 +205,7 @@
                  end-game"\n")
             output))))
 
-  (describe "Minimax"
+(describe "Minimax"
   (it "returns a winning position for player X on the board"
     (should= 8
       (get-computer-position ["O" "_" "X"
@@ -255,59 +230,11 @@
                               "O" "X" "X"
                               "O" "O" "_"] "X" "O")))
 
-  ; (it "returns something when something happens"
-  ;   (should= [5 10]
-  ;     (get-computer-position ["_" "O" "X"
-  ;                             "_" "_" "_"
-  ;                             "_" "_" "X"] "X" "O" 5  max -10)))
-
   (it "returns a position and 0 when the game is a draw"
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
                               "X" "O" "_"] "X" "O")))
-
- (it "returns a score of 10 if the game is a win"
-  (should= 10
-    (score-move ["X" "_" "_"
-                 "X" "O" "O"
-                 "X" "_" "_"] "X" "O")))
-
- (it "returns a score of -10 if the game is a loss"
-  (should= -10
-    (score-move ["X" "_" "_"
-                 "O" "O" "O"
-                 "X" "_" "_"] "X" "O")))
-
- (it "returns a score of zero if the game is a draw"
-  (should= 0
-    (score-move ["X" "X" "O"
-                 "O" "O" "X"
-                 "X" "O" "_"] "X" "O")))
-
-  (it "returns a positive score for a win with a depth of two"
-   (should= 5
-     (calculate-score 10 2)))
-
-  (it "returns a negative score for a loss with a depth of two"
-   (should= -5
-     (calculate-score -10 2)))
-
-  (it "returns a neutral score for a draw with a depth of two"
-   (should= 0
-     (calculate-score 0 2)))
-
- (it "returns a positive score when the depth is 0"
-  (should= 10
-    (calculate-score 10 0)))
-
-(it "returns a negative score when the depth is 0"
- (should= -10
-   (calculate-score -10 0)))
-
- (it "returns a score of 0 when the depth is 0"
-  (should= 0
-    (calculate-score 0 0)))
 
   (it "picks the highest score for a maximising player when there is a winning position"
     (should= 10
