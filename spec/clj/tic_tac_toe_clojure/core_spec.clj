@@ -236,30 +236,20 @@
                               "O" "X" "X"
                               "X" "O" "_"] "X" "O")))
 
-  (it "picks the highest score for a maximising player when there is a winning position"
+  (it "returns a score of 10 if the game is a win"
     (should= 10
-      (return-evaluated-score max -10 ["X" "_" "O"
-                                       "_" "X" "O"
-                                       "_" "_" "X"] "X" "O" 1)))
+      (evaluate-board ["X" "_" "_"
+                       "X" "O" "O"
+                       "X" "_" "_"] "X" "O")))
 
-  (it "picks the highest score for a maximising player when there is no winning position"
+  (it "returns a score of -10 if the game is a loss"
+    (should= -10
+      (evaluate-board ["X" "_" "_"
+                       "O" "O" "O"
+                       "X" "_" "_"] "X" "O")))
+
+  (it "returns a score of zero if the game is a draw"
     (should= 0
-      (return-evaluated-score max -10 ["X" "_" "O"
-                                       "_" "X" "O"
-                                       "_" "_" "_"] "X" "O" 1)))
-
-  (it "picks the highest score for a minimising player when there is a blocking position"
-    (should= 0
-      (return-evaluated-score min 10 ["O" "_" "X"
-                                      "X" "X" "O"
-                                      "O" "_" "_"] "O" "X" 1)))
-
- (it "picks the highest score for a minimising player when there is a winning position"
-   (should= 5
-     (return-evaluated-score min 10 ["O" "_" "X"
-                                     "O" "X" "O"
-                                     "O" "_" "_"] "O" "X" 2)))
-                )
-(it "returns a hash with positions and scores"
-  (should= {0 5/4, 3 0, 6 0}
-    (score-positions ["_" "X" "X" "_" "O" "O" "_" "X" "O"] "X" "O" 8)))
+      (evaluate-board ["X" "X" "O"
+                       "O" "O" "X"
+                       "X" "O" "_"] "X" "O")))

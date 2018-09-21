@@ -64,7 +64,7 @@
   (or (three-aligned? board symbol) (board-full? board)))
 
 
-(defn score-move [board current-player opponent]
+(defn evaluate-board [board current-player opponent]
   (cond
     (three-aligned? board current-player) 10
     (three-aligned? board opponent) -10
