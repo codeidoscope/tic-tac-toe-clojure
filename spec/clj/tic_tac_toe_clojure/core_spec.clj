@@ -4,7 +4,7 @@
 
 (defn all-computer-boards [board human-player computer-player]
   (mapcat identity
-    (for [spot (empty-spots board)]
+    (for [spot (get-empty-spots board)]
       (let [board-with-human-move (set-position board spot human-player)]
         (if (game-over? board-with-human-move human-player computer-player)
           [board-with-human-move]
@@ -120,11 +120,11 @@
   (it "tests a Human VS Human game"
       (let [output (with-out-str (with-in-str "h\nh\n0\n2\n3\n5\n6" (start-game)))
             board-state-1 (create-board)
-            board-state-2 (set-position board-state-1 0 "O")
-            board-state-3 (set-position board-state-2 2 "X")
-            board-state-4 (set-position board-state-3 3 "O")
-            board-state-5 (set-position board-state-4 5 "X")
-            board-state-6 (set-position board-state-5 6 "O")]
+            board-state-2 (set-position board-state-1 0 "X")
+            board-state-3 (set-position board-state-2 2 "O")
+            board-state-4 (set-position board-state-3 3 "X")
+            board-state-5 (set-position board-state-4 5 "O")
+            board-state-6 (set-position board-state-5 6 "X")]
         (should=
           (str select-opponent
                select-opponent

@@ -109,7 +109,7 @@
   Player
   (get-symbol [this] symbol)
   (get-move [this board opponent]
-    (get-computer-position board this opponent)))
+    (get-computer-position board symbol (get-symbol opponent))))
 
 (defn make-computer-player [symbol] (ComputerPlayer. symbol))
 
@@ -134,4 +134,4 @@
   (let [player-1 (get-player "X")
         player-2 (get-player "O")]
     (display-board numbered-board)
-    (next-player-turn (create-board) player-2 player-1)))
+    (next-player-turn (create-board) player-1 player-2)))
