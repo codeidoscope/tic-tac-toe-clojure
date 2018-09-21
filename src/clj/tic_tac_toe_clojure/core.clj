@@ -63,8 +63,8 @@
 
 (def end-game "Game is over")
 
-(defn game-over? [board symbol]
-  (or (three-aligned? board symbol) (board-full? board)))
+(defn game-over? [board symbol1 symbol2]
+  (or (three-aligned? board symbol1) (three-aligned? board symbol2) (board-full? board)))
 
 
 (defn evaluate-board [board current-player opponent]
@@ -74,7 +74,7 @@
     :else 0))
 
 (defn minimax [board maximising-player minimising-player]
-    (if (game-over? board maximising-player)
+    (if (game-over? board maximising-player minimising-player)
       (evaluate-board board maximising-player minimising-player)
       (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player))))))
 
@@ -109,7 +109,7 @@
 
 (defn next-player-turn [board current-player opponent]
   (display-board board)
-  (if (game-over? board (get-symbol opponent))
+  (if (game-over? board (get-symbol opponent) (get-symbol current-player))
     (println end-game)
     (recur
       (set-position board

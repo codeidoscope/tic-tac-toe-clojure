@@ -6,11 +6,11 @@
   (mapcat identity
     (for [spot (empty-spots board)]
       (let [board-with-human-move (set-position board spot human-player)]
-        (if (better-game-over? board-with-human-move human-player computer-player)
+        (if (game-over? board-with-human-move human-player computer-player)
           [board-with-human-move]
           (let [computer-move (choose-best-move board-with-human-move computer-player human-player)
                 board-with-computer-move (set-position board-with-human-move computer-move computer-player)]
-            (if (better-game-over? board-with-computer-move computer-player human-player)
+            (if (game-over? board-with-computer-move computer-player human-player)
               [board-with-human-move board-with-computer-move]
               (concat [board-with-human-move board-with-computer-move]
                 (all-computer-boards board-with-computer-move human-player computer-player)))))))))
@@ -108,13 +108,13 @@
 
   (it "returns true if the game is over because three symbols are aligned"
     (should= true
-      (game-over? (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O") "X")))
+      (game-over? (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O") "X" "O")))
 
   (it "returns true if the game is over because the board is full"
     (should= true
       (game-over? ["X" "O" "X"
                    "O" "X" "O"
-                   "X" "O" "X"] "X")))
+                   "X" "O" "X"] "X" "O"))))
 
 (describe "A game"
   (it "tests a Human VS Human game"
