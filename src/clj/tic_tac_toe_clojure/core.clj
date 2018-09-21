@@ -2,6 +2,9 @@
   (:require [clojure.string :as string]))
 
 (declare start-game)
+(declare scored-moves)
+(declare score-move)
+
 (defn -main [& args]
   (println "Starting game")
   (start-game))
@@ -70,6 +73,10 @@
     (three-aligned? board opponent) -10
     :else 0))
 
+(defn minimax [board maximising-player minimising-player]
+    (if (game-over? board maximising-player)
+      (evaluate-board board maximising-player minimising-player)
+      (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player))))))
 
 (defn score-move [board position current-player opponent]
   {position (minimax (set-position board position current-player) current-player opponent)})
@@ -78,8 +85,11 @@
   (let [empty-spots (empty-spots board)]
     (into (sorted-map) (map #(score-move board % current-player opponent) empty-spots))))
 
+(defn choose-best-move [board current-player opponent]
+  (key (apply max-key val (scored-moves board current-player opponent))))
 
 (defn get-computer-position [board current-player opponent]
+  (choose-best-move board current-player opponent))
 
 (defprotocol Player
   (get-symbol [this])

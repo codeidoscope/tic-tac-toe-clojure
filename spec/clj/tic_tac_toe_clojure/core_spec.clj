@@ -2,6 +2,19 @@
   (:require [speclj.core :refer :all]
             [tic-tac-toe-clojure.core :refer :all]))
 
+(defn all-computer-boards [board human-player computer-player]
+  (mapcat identity
+    (for [spot (empty-spots board)]
+      (let [board-with-human-move (set-position board spot human-player)]
+        (if (better-game-over? board-with-human-move human-player computer-player)
+          [board-with-human-move]
+          (let [computer-move (choose-best-move board-with-human-move computer-player human-player)
+                board-with-computer-move (set-position board-with-human-move computer-move computer-player)]
+            (if (better-game-over? board-with-computer-move computer-player human-player)
+              [board-with-human-move board-with-computer-move]
+              (concat [board-with-human-move board-with-computer-move]
+                (all-computer-boards board-with-computer-move human-player computer-player)))))))))
+
 (describe "A board"
   (it "has 9 cells"
     (should= ["_" "_" "_"
@@ -284,3 +297,24 @@
                      "X" "O" "O"
                      "O" "O" "X"] "X" "O")))
 
+  (it "returns a winning position for the maximising player"
+    (should= 5
+      (choose-best-move ["O" "X" "X"
+                         "_" "_" "_"
+                         "O" "O" "X"] "X" "O")))
+
+  (it "returns a position that will make the maximising player lose"
+    (should= 3
+      (choose-best-move ["O" "X" "X"
+                         "_" "_" "_"
+                         "O" "O" "X"] "O" "X")))
+
+  (it "returns a position that will make the maximising player lose"
+    (should= 5
+      (choose-best-move ["O" "X" "X"
+                         "X" "_" "_"
+                         "_" "O" "X"] "O" "X")))
+
+  (it "does not loose"
+     (doseq [board (all-computer-boards (create-board) "X" "0")]
+       (should (>= 0 (evaluate-board board "O" "X"))))))
