@@ -253,3 +253,22 @@
       (evaluate-board ["X" "X" "O"
                        "O" "O" "X"
                        "X" "O" "_"] "X" "O")))
+
+  (it "returns a hash that includes the position and the score of the move when there is a winning move"
+    (should= {5 10}
+      (score-move ["O" "X" "X"
+                   "O" "_" "_"
+                   "_" "O" "X"] 5 "X" "O")))
+
+  (it "returns a hash that includes the position and the score of the move when there is a neutral move"
+    (should= {4 0}
+      (score-move ["X" "O" "X"
+                   "O" "_" "_"
+                   "_" "X" "O"] 4 "X" "O")))
+
+  (it "returns a hash that includes the position and the score of the move when there is a losing move"
+    (should= {4 -10}
+      (score-move ["O" "X" "X"
+                   "O" "_" "_"
+                   "O" "O" "X"] 4 "X" "O")))
+

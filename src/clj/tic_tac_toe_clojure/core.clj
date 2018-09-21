@@ -71,6 +71,8 @@
     :else 0))
 
 
+(defn score-move [board position current-player opponent]
+  {position (minimax (set-position board position current-player) current-player opponent)})
 
 
 
