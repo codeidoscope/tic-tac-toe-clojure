@@ -66,6 +66,8 @@
 (defn game-over? [board symbol1 symbol2]
   (or (three-aligned? board symbol1) (three-aligned? board symbol2) (board-full? board)))
 
+(defn get-empty-spots [board]
+  (remove #{"_"} (flatten (find-empty-spots board))))
 
 (defn evaluate-board [board current-player opponent]
   (cond
@@ -82,7 +84,7 @@
   {position (minimax (set-position board position current-player) current-player opponent)})
 
 (defn scored-moves [board current-player opponent]
-  (let [empty-spots (empty-spots board)]
+  (let [empty-spots (get-empty-spots board)]
     (into (sorted-map) (map #(score-move board % current-player opponent) empty-spots))))
 
 (defn choose-best-move [board current-player opponent]
@@ -101,11 +103,15 @@
   (get-move [this board opponent]
     (get-human-position)))
 
+(defn make-human-player [symbol] (HumanPlayer. symbol))
+
 (deftype ComputerPlayer [symbol]
   Player
   (get-symbol [this] symbol)
   (get-move [this board opponent]
     (get-computer-position board this opponent)))
+
+(defn make-computer-player [symbol] (ComputerPlayer. symbol))
 
 (defn next-player-turn [board current-player opponent]
   (display-board board)
