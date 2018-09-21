@@ -272,3 +272,15 @@
                    "O" "_" "_"
                    "O" "O" "X"] 4 "X" "O")))
 
+  (it "returns a list of scored positions in hashes"
+    (should= {3 0, 4 -10, 5 10}
+      (scored-moves ["O" "X" "X"
+                     "_" "_" "_"
+                     "O" "O" "X"] "X" "O")))
+
+  (it "returns an empty list if the board is full"
+    (should= {}
+      (scored-moves ["O" "X" "X"
+                     "X" "O" "O"
+                     "O" "O" "X"] "X" "O")))
+

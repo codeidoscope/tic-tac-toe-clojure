@@ -74,6 +74,9 @@
 (defn score-move [board position current-player opponent]
   {position (minimax (set-position board position current-player) current-player opponent)})
 
+(defn scored-moves [board current-player opponent]
+  (let [empty-spots (empty-spots board)]
+    (into (sorted-map) (map #(score-move board % current-player opponent) empty-spots))))
 
 
 (defn get-computer-position [board current-player opponent]
