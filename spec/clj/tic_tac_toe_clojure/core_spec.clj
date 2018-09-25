@@ -58,7 +58,9 @@
 
   (it "prompts a human player to pick a position on the board"
     (should= 1
-      (with-in-str "1" (get-human-position)))))
+      (with-in-str "1" (get-human-position ["O" "_" "_"
+                                            "_" "X" "_"
+                                            "_" "_" "_"] "Fake prompt "))))
 
   (it "returns true when a position is empty"
     (should= true
@@ -72,6 +74,11 @@
                         "_" "X" "_"
                         "_" "_" "_"] 4)))
 
+  (it "returns the user's input if it is valid"
+    (should= 3
+      (with-in-str "3" (get-human-position ["O" "_" "_"
+                                            "_" "X" "_"
+                                            "_" "_" "_"] "Fake prompt ")))))
 
 (describe "A decision engine"
   (it "gets the rows from a board"

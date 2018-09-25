@@ -31,8 +31,12 @@
 (defn prompt-user [prompt]
   (do (print prompt) (flush) (read-line)))
 
-(defn get-human-position []
-  (Integer/parseInt (prompt-user select-position)))
+(defn get-human-position [board prompt]
+  (let [user-input (prompt-user prompt)
+        input-to-int (Integer/parseInt user-input)]
+      (if (position-empty? board input-to-int)
+            input-to-int
+            (get-human-position board wrong-position))))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
@@ -108,7 +112,7 @@
   Player
   (get-symbol [this] symbol)
   (get-move [this board opponent]
-    (get-human-position)))
+    (get-human-position board select-position)))
 
 (defn make-human-player [symbol] (HumanPlayer. symbol))
 
