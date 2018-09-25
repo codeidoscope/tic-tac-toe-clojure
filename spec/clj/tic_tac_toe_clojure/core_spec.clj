@@ -80,37 +80,21 @@
                                             "_" "X" "_"
                                             "_" "_" "_"] "Fake prompt "))))
 
-  (it "returns true if the input is longer than one character"
+  (it "returns true if the input for position selection is valid"
     (should= true
-      (too-long? "18")))
+      (valid-position-selection? "1")))
 
-  (it "returns false if the input is not longer than one character"
+  (it "returns false if the input for position selection is invalid because beyond range"
     (should= false
-      (too-long? "1")))
+      (valid-position-selection? "9")))
 
-  (it "returns true if the input is a number below or above range 0-8"
-    (should= true
-      (not-in-range? 9)))
-
-  (it "returns false if the input is a number within range 0-8"
+  (it "returns false if the input for position selection is invalid because too long"
     (should= false
-      (not-in-range? 3)))
+      (valid-position-selection? "1234")))
 
-  (it "returns true if the input is entirely numerical"
-    (should= true
-      (is-numeric? "12345")))
-
-  (it "returns false if the input is not entirely numerical"
+  (it "returns false if the input for position selection is invalid because not numerical"
     (should= false
-      (is-numeric? "hello123")))
-
-  (it "returns true if the input is invalid"
-    (should= true
-      (invalid-position-input? "hello123")))
-
-  (it "returns false if the input is valid"
-    (should= false
-      (invalid-position-input? "1")))
+      (valid-position-selection? "g")))
 
   (it "returns true if the input for player selection is valid with an uppercase letter"
     (should= true
