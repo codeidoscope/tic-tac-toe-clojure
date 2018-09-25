@@ -60,6 +60,19 @@
     (should= 1
       (with-in-str "1" (get-human-position)))))
 
+  (it "returns true when a position is empty"
+    (should= true
+      (position-empty? ["O" "_" "_"
+                        "_" "_" "_"
+                        "_" "_" "_"] 4)))
+
+  (it "returns false when a position is not empty"
+    (should= false
+      (position-empty? ["O" "_" "_"
+                        "_" "X" "_"
+                        "_" "_" "_"] 4)))
+
+
 (describe "A decision engine"
   (it "gets the rows from a board"
     (should= [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]

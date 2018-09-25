@@ -25,6 +25,9 @@
 
 (def wrong-position "This position is occupied, please select another: ")
 
+(defn position-empty? [board position]
+  (= (nth board position) "_"))
+
 (defn prompt-user [prompt]
   (do (print prompt) (flush) (read-line)))
 
