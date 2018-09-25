@@ -23,7 +23,31 @@
 
 (def select-position "Please choose a position between 0 and 8: ")
 
-(def wrong-position "This position is occupied, please select another: ")
+(def occupied-position "This position is occupied, please select another: ")
+
+(def wrong-position-input "This number is invalid, please enter a number between 0 and 8 ")
+
+(defn too-long? [input]
+  (> (count input) 1))
+
+(defn not-in-range? [input]
+  (or (< input 0) (> input 8)))
+
+(defn is-numeric? [input]
+  (if-let [input (seq input)]
+    (let [input (if (= (first input) \-) (next input) input)
+          input (drop-while #(Character/isDigit %) input)
+          input (if (= (first input) \.) (next input) input)
+          input (drop-while #(Character/isDigit %) input)]
+      (empty? input))))
+
+(defn incorrect-length-and-range? [input]
+  (or (too-long? input)
+      (not-in-range? (Integer/parseInt input))))
+
+(defn invalid-position-input? [input]
+  (if (is-numeric? input)
+      (incorrect-length-and-range? input) true))
 
 (defn position-empty? [board position]
   (= (nth board position) "_"))
@@ -32,11 +56,12 @@
   (do (print prompt) (flush) (read-line)))
 
 (defn get-human-position [board prompt]
-  (let [user-input (prompt-user prompt)
-        input-to-int (Integer/parseInt user-input)]
-      (if (position-empty? board input-to-int)
-            input-to-int
-            (get-human-position board wrong-position))))
+  (let [user-input (prompt-user prompt)]
+      (if (invalid-position-input? user-input)
+          (get-human-position board wrong-position-input)
+          (if (position-empty? board (Integer/parseInt user-input))
+                (Integer/parseInt user-input)
+                (get-human-position board occupied-position)))))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
