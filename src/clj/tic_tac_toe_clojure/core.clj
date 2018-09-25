@@ -23,6 +23,8 @@
 
 (def select-position "Please choose a position between 0 and 8: ")
 
+(def wrong-position "This position is occupied, please select another: ")
+
 (defn prompt-user [prompt]
   (do (print prompt) (flush) (read-line)))
 
@@ -34,7 +36,9 @@
 
 (def set-position assoc)
 
-(def select-opponent "Please select an opponent (H for human or C for computer): ")
+(def select-first-player "Please select the first player to take a turn (H for human or C for computer): ")
+
+(def select-opponent "Please select an opponent: ")
 
 (defn get-rows [board]
   (partition 3 board))
@@ -124,14 +128,14 @@
       opponent
       current-player)))
 
-(defn get-player [marker]
-  (let [player-type (prompt-user select-opponent)]
+(defn get-player [marker prompt]
+  (let [player-type (prompt-user prompt)]
   (if (= player-type "h")
     (HumanPlayer. marker)
     (ComputerPlayer. marker))))
 
 (defn start-game []
-  (let [player-1 (get-player "X")
-        player-2 (get-player "O")]
+  (let [player-1 (get-player "X" select-first-player)
+        player-2 (get-player "O" select-opponent)]
     (display-board numbered-board)
     (next-player-turn (create-board) player-1 player-2)))
