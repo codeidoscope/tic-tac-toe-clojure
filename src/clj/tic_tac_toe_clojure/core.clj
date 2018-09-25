@@ -68,9 +68,14 @@
 
 (def set-position assoc)
 
-(def select-first-player "Please select the first player to take a turn (H for human or C for computer): ")
+(def select-first-player "Please select the first player to take a turn (H/h for human or C/c for computer): ")
 
 (def select-opponent "Please select an opponent: ")
+
+(def invalid-player-selection "Invalid choice, please choose H/h for human or C/c for computer: ")
+
+(defn valid-player-selection? [input]
+  (boolean (some #{input} ["C" "c" "h" "H"])))
 
 (defn get-rows [board]
   (partition 3 board))
@@ -162,9 +167,11 @@
 
 (defn get-player [marker prompt]
   (let [player-type (prompt-user prompt)]
-  (if (= player-type "h")
-    (HumanPlayer. marker)
-    (ComputerPlayer. marker))))
+  (if (valid-player-selection? player-type)
+      (if (= player-type "h")
+        (HumanPlayer. marker)
+        (ComputerPlayer. marker))
+        (get-player marker invalid-player-selection))))
 
 (defn start-game []
   (let [player-1 (get-player "X" select-first-player)

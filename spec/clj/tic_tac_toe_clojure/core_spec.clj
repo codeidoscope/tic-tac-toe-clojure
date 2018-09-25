@@ -110,7 +110,27 @@
 
   (it "returns false if the input is valid"
     (should= false
-      (invalid-position-input? "1"))))
+      (invalid-position-input? "1")))
+
+  (it "returns true if the input for player selection is valid with an uppercase letter"
+    (should= true
+      (valid-player-selection? "C")))
+
+  (it "returns true if the input for player selection is valid with a lowercase letter"
+    (should= true
+      (valid-player-selection? "h")))
+
+  (it "returns false if the input for player selection is invalid because it's not C or H"
+    (should= false
+      (valid-player-selection? "Z")))
+
+  (it "returns false if the input for player selection is invalid because it's too long"
+    (should= false
+      (valid-player-selection? "hello")))
+
+  (it "returns false if the input for player selection is invalid because it's numerical"
+    (should= false
+      (valid-player-selection? "123"))))
 
 (describe "A decision engine"
   (it "gets the rows from a board"
