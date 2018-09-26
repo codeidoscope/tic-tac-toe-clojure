@@ -154,27 +154,77 @@
                        "_" "X" "_"
                        "O" "_" "X"] "X")))
 
-  (it "returns true if a board is full"
+  (it "checks if three symbols are aligned"
+    (should= true
+      (four-aligned? ["X" "_" "_" "_"
+                       "_" "X" "_" "_"
+                       "_" "_" "X" "_"
+                       "_" "_" "_" "X"] "X")))
+
+  (it "returns true if a 3x3 board is full"
     (should= true
       (board-full? ["X" "O" "X"
                     "O" "X" "O"
                     "X" "O" "X"])))
 
-  (it "returns false if a board is not full"
+  (it "returns true if a 4x4 board is full"
+    (should= true
+      (board-full? ["X" "O" "X" "X"
+                    "O" "X" "O" "O"
+                    "X" "O" "X" "X"
+                    "X" "O" "X" "X"])))
+
+  (it "returns false if a 3x3 board is not full"
     (should= false
       (board-full? ["X" "O" "X"
                     "O" "X" "O"
                     "X" "O" "_"])))
 
+  (it "returns false if a 4x4 board is not full"
+    (should= false
+      (board-full? ["X" "O" "X" "X"
+                    "O" "X" "_" "O"
+                    "X" "O" "X" "X"
+                    "X" "O" "X" "X"])))
+
   (it "returns true if the game is over because three symbols are aligned"
     (should= true
-      (game-over? (set-position (set-position (set-position (set-position (set-position (create-board) 0 "X") 4 "X") 8 "X") 2 "O") 6 "O") "X" "O")))
+      (game-over? ["X" "_" "O"
+                   "_" "X" "_"
+                   "O" "_" "X"] "X" "O")))
 
   (it "returns true if the game is over because the board is full"
     (should= true
       (game-over? ["X" "O" "X"
                    "O" "X" "O"
-                   "X" "O" "X"] "X" "O"))))
+                   "X" "O" "X"] "X" "O")))
+
+  (it "returns false if the game is not over and no three symbols are aligned"
+   (should= false
+     (game-over? ["X" "_" "O"
+                  "_" "_" "_"
+                  "O" "_" "X"] "X" "O")))
+
+ (it "returns true if the game is over because four symbols are aligned"
+   (should= true
+     (game-over-4x4? ["X" "O" "X" "X"
+                      "O" "X" "_" "O"
+                      "X" "O" "X" "X"
+                      "X" "O" "X" "X"] "X" "O")))
+
+ (it "returns true if the game is over because the 4x4 board is full"
+   (should= true
+     (game-over-4x4? ["X" "O" "X" "X"
+                      "O" "X" "X" "O"
+                      "X" "O" "O" "X"
+                      "X" "O" "X" "X"] "X" "O")))
+
+  (it "returns false if the game is not over and no four symbols are aligned"
+   (should= false
+     (game-over-4x4? ["X" "O" "X" "X"
+                      "O" "_" "_" "_"
+                      "X" "O" "_" "X"
+                      "_" "O" "X" "X"] "X" "O"))))
 
 (describe "A game"
   (it "tests a Human VS Human game"

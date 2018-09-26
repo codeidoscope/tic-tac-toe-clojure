@@ -82,6 +82,9 @@
 (defn three-aligned? [board symbol]
   (some true? (for [section (join-sections board)] (symbols-equal? section symbol))))
 
+(defn four-aligned? [board symbol]
+  (some true? (for [section (join-4x4-sections board)] (symbols-4x4-equal? section symbol))))
+
 (defn board-full? [board]
   (if (some #{"_"} board) false true))
 
@@ -89,6 +92,9 @@
 
 (defn game-over? [board symbol1 symbol2]
   (or (three-aligned? board symbol1) (three-aligned? board symbol2) (board-full? board)))
+
+(defn game-over-4x4? [board symbol1 symbol2]
+  (or (four-aligned? board symbol1) (four-aligned? board symbol2) (board-full? board)))
 
 (defn get-empty-spots [board]
   (remove #{"_"} (flatten (find-empty-spots board))))
