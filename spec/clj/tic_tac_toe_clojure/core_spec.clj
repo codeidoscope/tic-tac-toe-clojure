@@ -369,6 +369,27 @@
                        "O" "O" "X"
                        "X" "O" "_"] "X" "O")))
 
+  (it "returns a score of 10 if the game is a win"
+   (should= 10
+     (evaluate-4x4-board ["X" "X" "X" "X"
+                          "O" "X" "_" "O"
+                          "X" "O" "X" "X"
+                          "X" "O" "X" "X"] "X" "O")))
+
+  (it "returns a score of -10 if the game is a loss"
+   (should= -10
+     (evaluate-4x4-board ["X" "O" "X" "X"
+                          "O" "O" "_" "O"
+                          "X" "O" "X" "X"
+                          "X" "O" "X" "X"] "X" "O")))
+
+  (it "returns a score of zero if the game is a draw"
+   (should= 0
+     (evaluate-4x4-board ["X" "O" "X" "X"
+                          "O" "X" "_" "O"
+                          "X" "O" "O" "X"
+                          "X" "O" "X" "X"] "X" "O")))
+
   (it "returns a hash that includes the position and the score of the move when there is a winning move"
     (should= {5 10}
       (score-move ["O" "X" "X"

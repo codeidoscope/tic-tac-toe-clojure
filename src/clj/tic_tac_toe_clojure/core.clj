@@ -105,6 +105,12 @@
     (three-aligned? board opponent) -10
     :else 0))
 
+(defn evaluate-4x4-board [board current-player opponent]
+  (cond
+    (four-aligned? board current-player) 10
+    (four-aligned? board opponent) -10
+    :else 0))
+
 (defn minimax [board maximising-player minimising-player]
     (if (game-over? board maximising-player minimising-player)
       (evaluate-board board maximising-player minimising-player)
