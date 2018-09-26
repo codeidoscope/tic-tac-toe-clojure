@@ -12,6 +12,9 @@
 (defn create-board []
   (into [] (repeat 9 "_")))
 
+(defn create-4x4-board []
+  (into [] (repeat 16 "_")))
+
 (def numbered-board
   ["0" "1" "2" "3" "4" "5" "6" "7" "8"])
 
@@ -25,7 +28,7 @@
   (apply str (flatten (for [part (partition 4 board)] (flatten (map vector part '(" | " " | " " | " "\n--------------\n")))))))
 
 (defn display-board [board]
-  (print (format-board board)))
+  (print (format-4x4-board board)))
 
 (def select-position "Please choose a position between 0 and 8: ")
 
@@ -35,7 +38,7 @@
   (do (print prompt) (flush) (read-line)))
 
 (defn get-human-position []
-  (Integer/parseInt (prompt-user select-position)))
+  (Integer/parseInt (prompt-user select-4x4-position)))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
@@ -112,8 +115,8 @@
     :else 0))
 
 (defn minimax [board maximising-player minimising-player]
-    (if (game-over? board maximising-player minimising-player)
-      (evaluate-board board maximising-player minimising-player)
+    (if (game-over-4x4? board maximising-player minimising-player)
+      (evaluate-4x4-board board maximising-player minimising-player)
       (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player))))))
 
 (defn score-move [board position current-player opponent]
@@ -151,7 +154,7 @@
 
 (defn next-player-turn [board current-player opponent]
   (display-board board)
-  (if (game-over? board (get-symbol opponent) (get-symbol current-player))
+  (if (game-over-4x4? board (get-symbol opponent) (get-symbol current-player))
     (println end-game)
     (recur
       (set-position board
@@ -169,5 +172,5 @@
 (defn start-game []
   (let [player-1 (get-player "X")
         player-2 (get-player "O")]
-    (display-board numbered-board)
-    (next-player-turn (create-board) player-1 player-2)))
+    (display-board numbered-4x4-board)
+    (next-player-turn (create-4x4-board) player-1 player-2)))

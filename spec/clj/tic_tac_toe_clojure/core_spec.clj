@@ -22,6 +22,13 @@
               "_" "_" "_"]
       (create-board)))
 
+  (it "has 16 cells"
+    (should= ["_" "_" "_" "_"
+              "_" "_" "_" "_"
+              "_" "_" "_" "_"
+              "_" "_" "_" "_"]
+      (create-4x4-board)))
+
   (it "sets a X mark at the correct position"
     (should= ["X" "_" "_"
               "_" "_" "_"
