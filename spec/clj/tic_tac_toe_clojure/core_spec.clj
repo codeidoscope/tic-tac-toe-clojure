@@ -53,7 +53,7 @@
 
   (it "is displayed on four lines and four columns with separators when numbered"
     (should=
-      "0 | 1 | 2 | 3\n--------------\n4 | 5 | 6 | 7\n--------------\n8 | 9 | 10 | 11\n--------------\n12 | 13 | 14 | 15\n"
+      "0 | 1 | 2 | 3\n--------------\n4 | 5 | 6 | 7\n--------------\n8 | 9 | 10 | 11\n--------------\n12 | 13 | 14 | 15\n--------------\n"
       (format-4x4-board numbered-4x4-board))))
 
 (describe "A UI"
