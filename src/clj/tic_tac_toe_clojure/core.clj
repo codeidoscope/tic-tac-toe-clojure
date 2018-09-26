@@ -29,6 +29,8 @@
 
 (def select-position "Please choose a position between 0 and 8: ")
 
+(def select-4x4-position "Please choose a position between 0 and 15: ")
+
 (defn prompt-user [prompt]
   (do (print prompt) (flush) (read-line)))
 
@@ -45,8 +47,14 @@
 (defn get-rows [board]
   (partition 3 board))
 
+(defn get-4x4-rows [board]
+  (partition 4 board))
+
 (defn get-columns [board]
   (apply map vector (get-rows board)))
+
+(defn get-4x4-columns [board]
+  (apply map vector (get-4x4-rows board)))
 
 (defn- symbols-at [board positions]
   (map (fn [position] (nth board position)) positions))
@@ -54,6 +62,10 @@
 (defn get-diagonals [board]
   [(symbols-at board [0 4 8])
    (symbols-at board [2 4 6])])
+
+(defn get-4x4-diagonals [board]
+ [(symbols-at board [0 5 10 15])
+  (symbols-at board [3 6 9 12])])
 
 (defn join-sections [board]
   (concat (get-rows board) (concat (get-columns board)) (concat (get-diagonals board))))

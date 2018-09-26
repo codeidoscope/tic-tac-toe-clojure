@@ -72,17 +72,38 @@
                  "O" "_" "_"
                  "X" "_" "_"])))
 
+ (it "gets the rows from a 4x4 board"
+   (should= [["X" "_" "_" "_"] ["O" "_" "_" "_"] ["X" "_" "_" "_"] ["O" "_" "_" "_"]]
+     (get-4x4-rows ["X" "_" "_" "_"
+                    "O" "_" "_" "_"
+                    "X" "_" "_" "_"
+                    "O" "_" "_" "_"])))
+
   (it "gets the columns from a board"
     (should= [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
       (get-columns ["X" "O" "X"
                     "_" "_" "_"
                     "_" "_" "_"])))
 
+  (it "gets the columns from a 4x4 board"
+    (should= [["X" "_" "_" "_"] ["O" "_" "_" "_"] ["X" "_" "_" "_"] ["O" "_" "_" "_"]]
+      (get-4x4-columns ["X" "O" "X" "O"
+                        "_" "_" "_" "_"
+                        "_" "_" "_" "_"
+                        "_" "_" "_" "_"])))
+
   (it "gets the diagonals from a board"
       (should= [["X" "O" "X"] ["O" "O" "O"]]
         (get-diagonals ["X" "_" "O"
                         "_" "O" "_"
                         "O" "_" "X"])))
+
+  (it "gets the diagonals from a 4x4 board"
+      (should= [["X" "X" "X" "X"] ["O" "O" "O" "O"]]
+        (get-4x4-diagonals ["X" "_" "_" "O"
+                        "_" "X" "O" "_"
+                        "_" "O" "X" "_"
+                        "O" "_" "_" "X"])))
 
   (it "joins the rows, columns and diagonals"
     (should=
