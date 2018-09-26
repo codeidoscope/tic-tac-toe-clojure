@@ -70,8 +70,14 @@
 (defn join-sections [board]
   (concat (get-rows board) (concat (get-columns board)) (concat (get-diagonals board))))
 
+(defn join-4x4-sections [board]
+  (concat (get-4x4-rows board) (concat (get-4x4-columns board)) (concat (get-4x4-diagonals board))))
+
 (defn symbols-equal? [section symbol]
   (and (= (nth section 0) (nth section 1) (nth section 2) symbol) (not= (apply str section) "___")))
+
+(defn symbols-4x4-equal? [section symbol]
+  (and (= (nth section 0) (nth section 1) (nth section 2) (nth section 3) symbol) (not= (apply str section) "____")))
 
 (defn three-aligned? [board symbol]
   (some true? (for [section (join-sections board)] (symbols-equal? section symbol))))

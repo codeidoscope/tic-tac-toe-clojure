@@ -101,9 +101,9 @@
   (it "gets the diagonals from a 4x4 board"
       (should= [["X" "X" "X" "X"] ["O" "O" "O" "O"]]
         (get-4x4-diagonals ["X" "_" "_" "O"
-                        "_" "X" "O" "_"
-                        "_" "O" "X" "_"
-                        "O" "_" "_" "X"])))
+                            "_" "X" "O" "_"
+                            "_" "O" "X" "_"
+                            "O" "_" "_" "X"])))
 
   (it "joins the rows, columns and diagonals"
     (should=
@@ -113,6 +113,40 @@
       (join-sections ["X" "_" "O"
                       "_" "X" "_"
                       "O" "_" "X"])))
+
+  (it "joins the rows, columns and diagonals for a 4x4 board"
+    (should=
+      [["X" "_" "_" "O"] ["_" "X" "O" "_"] ["_" "O" "X" "_"] ["O" "_" "_" "X"]
+       ["X" "_" "_" "O"] ["_" "X" "O" "_"] ["_" "O" "X" "_"] ["O" "_" "_" "X"]
+       ["X" "X" "X" "X"] ["O" "O" "O" "O"]]
+      (join-4x4-sections ["X" "_" "_" "O"
+                      "_" "X" "O" "_"
+                      "_" "O" "X" "_"
+                      "O" "_" "_" "X"])))
+
+  (it "returns true if the symbols are equal"
+    (should= true
+      (symbols-equal? ["X" "X" "X"] "X")))
+
+  (it "returns false if the symbols are not equal"
+    (should= false
+      (symbols-equal? ["X" "_" "X"] "X")))
+
+  (it "returns false if there are no symbols"
+    (should= false
+      (symbols-equal? ["_" "_" "_"] "X")))
+
+  (it "returns true if the symbols are equal"
+    (should= true
+      (symbols-4x4-equal? ["X" "X" "X" "X"] "X")))
+
+  (it "returns false if the symbols are not equal"
+    (should= false
+      (symbols-4x4-equal? ["X" "_" "X" "_"] "X")))
+
+  (it "returns false if there are no symbols"
+    (should= false
+      (symbols-4x4-equal? ["_" "_" "_" "_"] "X")))
 
   (it "checks if three symbols are aligned"
     (should= true
