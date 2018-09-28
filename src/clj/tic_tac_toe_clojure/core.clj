@@ -24,6 +24,10 @@
 (def numbered-4x4-board
   ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15"])
 
+(defn numbered-sized-board [board]
+  (let [size (count board)]
+    (for [cell (take size (range))] (str cell))))
+
 (defn format-board [board]
   (apply str (flatten (for [part (partition 3 board)] (flatten (map vector part '(" | " " | " "\n---------\n")))))))
 

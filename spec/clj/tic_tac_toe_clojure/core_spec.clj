@@ -37,6 +37,14 @@
               "_" "_" "_" "_" "_"]
       (create-sized-board 5)))
 
+  (it "creates a numbered board given a specific size"
+    (should= ["0" "1" "2" "3" "4"
+              "5" "6" "7" "8" "9"
+              "10" "11" "12" "13" "14"
+              "15" "16" "17" "18" "19"
+              "20" "21" "22" "23" "24"]
+      (numbered-sized-board (create-sized-board 5))))
+
   (it "sets a X mark at the correct position"
     (should= ["X" "_" "_"
               "_" "_" "_"
