@@ -162,7 +162,11 @@
 
   (it "returns false if the input for player selection is invalid because it's numerical"
     (should= false
-      (valid-player-selection? "123"))))
+      (valid-player-selection? "123")))
+
+  (it "returns an integer if the input is valid"
+    (should= 5
+      (with-in-str "5" (pick-board-size "Fake prompt")))))
 
 (describe "A decision engine"
   (it "gets the rows from a board"

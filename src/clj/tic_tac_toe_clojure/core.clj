@@ -47,6 +47,10 @@
 
 (def invalid-4x4-position-selection "This number is invalid, please enter a number between 0 and 8: ")
 
+(def select-board-size "Please enter a number greater than 0 to determine the size of your board: ")
+
+(def invalid-board-size "This number is invalid, pleaser enter a number greater than 0: ")
+
 (defn valid-position-selection? [input]
   (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8"])))
 
@@ -58,6 +62,12 @@
 
 (defn prompt-user [prompt]
   (do (print prompt) (flush) (read-line)))
+
+(defn pick-board-size [prompt]
+  (let [user-input (prompt-user prompt)]
+    (if (boolean (re-seq #"^[1-9]+[0-9]*$" user-input))
+        (Integer/parseInt user-input)
+        (pick-board-size invalid-board-size))))
 
 (defn get-human-position [board prompt]
   (let [user-input (prompt-user prompt)]
