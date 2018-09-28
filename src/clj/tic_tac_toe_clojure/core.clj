@@ -34,18 +34,40 @@
 
 (def select-4x4-position "Please choose a position between 0 and 15: ")
 
+(def occupied-position "This position is occupied, please select another: ")
+
+(def invalid-position-selection "This number is invalid, please enter a number between 0 and 8 ")
+
+(defn valid-position-selection? [input]
+  (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8"])))
+
+(defn position-empty? [board position]
+  (= (nth board position) "_"))
+
 (defn prompt-user [prompt]
   (do (print prompt) (flush) (read-line)))
 
-(defn get-human-position []
-  (Integer/parseInt (prompt-user select-4x4-position)))
+(defn get-human-position [board prompt]
+  (let [user-input (prompt-user prompt)]
+      (if (valid-position-selection? user-input)
+          (if (position-empty? board (Integer/parseInt user-input))
+                (Integer/parseInt user-input)
+                (get-human-position board occupied-position))
+          (get-human-position board invalid-position-selection))))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
 
 (def set-position assoc)
 
-(def select-opponent "Please select an opponent (H for human or C for computer): ")
+(def select-first-player "Please select the first player to take a turn (H/h for human or C/c for computer): ")
+
+(def select-opponent "Please select an opponent: ")
+
+(def invalid-player-selection "Invalid choice, please choose H/h for human or C/c for computer: ")
+
+(defn valid-player-selection? [input]
+  (boolean (some #{input} ["C" "c" "h" "H"])))
 
 (defn get-rows [board]
   (partition 3 board))
@@ -140,7 +162,7 @@
   Player
   (get-symbol [this] symbol)
   (get-move [this board opponent]
-    (get-human-position)))
+    (get-human-position board select-4x4-position)))
 
 (defn make-human-player [symbol] (HumanPlayer. symbol))
 
@@ -163,14 +185,16 @@
       opponent
       current-player)))
 
-(defn get-player [marker]
-  (let [player-type (prompt-user select-opponent)]
-  (if (= player-type "h")
-    (HumanPlayer. marker)
-    (ComputerPlayer. marker))))
+(defn get-player [marker prompt]
+  (let [player-type (prompt-user prompt)]
+  (if (valid-player-selection? player-type)
+      (if (= player-type "h")
+        (HumanPlayer. marker)
+        (ComputerPlayer. marker))
+        (get-player marker invalid-player-selection))))
 
 (defn start-game []
-  (let [player-1 (get-player "X")
-        player-2 (get-player "O")]
+  (let [player-1 (get-player "X" select-first-player)
+        player-2 (get-player "O" select-opponent)]
     (display-board numbered-4x4-board)
-    (next-player-turn (create-4x4-board) player-1 player-2)))
+    (next-player-turn (create-board) player-1 player-2)))
