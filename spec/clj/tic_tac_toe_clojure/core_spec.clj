@@ -29,6 +29,14 @@
               "_" "_" "_" "_"]
       (create-4x4-board)))
 
+  (it "has the number of cells passed to the function"
+    (should= ["_" "_" "_" "_" "_"
+              "_" "_" "_" "_" "_"
+              "_" "_" "_" "_" "_"
+              "_" "_" "_" "_" "_"
+              "_" "_" "_" "_" "_"]
+      (create-sized-board 5)))
+
   (it "sets a X mark at the correct position"
     (should= ["X" "_" "_"
               "_" "_" "_"

@@ -15,6 +15,9 @@
 (defn create-4x4-board []
   (into [] (repeat 16 "_")))
 
+(defn create-sized-board [size]
+  (into [] (repeat (* size size) "_")))
+
 (def numbered-board
   ["0" "1" "2" "3" "4" "5" "6" "7" "8"])
 
