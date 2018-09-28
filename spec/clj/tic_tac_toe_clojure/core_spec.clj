@@ -124,6 +124,26 @@
     (should= false
       (valid-position-selection? "g")))
 
+  (it "returns true if the input for position selection is valid on 4x4 board on 4x4 board"
+    (should= true
+      (valid-4x4-position-selection? "1")))
+
+  (it "returns false if the input for position selection is invalid because beyond range on 4x4 board"
+    (should= false
+      (valid-4x4-position-selection? "16")))
+
+  (it "returns false if the input for positive position selection is invalid because beyond range on 4x4 board"
+    (should= false
+      (valid-4x4-position-selection? "-1")))
+
+  (it "returns false if the input for position selection is invalid because too long on 4x4 board"
+    (should= false
+      (valid-4x4-position-selection? "1234")))
+
+  (it "returns false if the input for position selection is invalid because not numerical on 4x4 board"
+    (should= false
+      (valid-4x4-position-selection? "g")))
+
   (it "returns true if the input for player selection is valid with an uppercase letter"
     (should= true
       (valid-player-selection? "C")))

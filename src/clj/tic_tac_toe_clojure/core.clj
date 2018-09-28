@@ -45,8 +45,13 @@
 
 (def invalid-position-selection "This number is invalid, please enter a number between 0 and 8 ")
 
+(def invalid-4x4-position-selection "This number is invalid, please enter a number between 0 and 8: ")
+
 (defn valid-position-selection? [input]
   (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8"])))
+
+  (defn valid-4x4-position-selection? [input]
+    (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15"])))
 
 (defn position-empty? [board position]
   (= (nth board position) "_"))
