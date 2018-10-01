@@ -54,8 +54,8 @@
 (defn valid-position-selection? [input]
   (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8"])))
 
-  (defn valid-4x4-position-selection? [input]
-    (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15"])))
+(defn valid-4x4-position-selection? [input]
+  (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15"])))
 
 (defn position-empty? [board position]
   (= (nth board position) "_"))
@@ -91,92 +91,75 @@
 (defn valid-player-selection? [input]
   (boolean (some #{input} ["C" "c" "h" "H"])))
 
-(defn get-rows [board]
-  (partition 3 board))
+(defn get-rows [board size]
+  (partition size board))
 
-(defn get-4x4-rows [board]
-  (partition 4 board))
+(defn get-left-diagonal [size]
+  (reduce (fn [a b] (conj a (+' (last a) (+ 1 size)))) [0 (+ 1 size)] (range (- size 2))))
 
-(defn get-columns [board]
-  (apply map vector (get-rows board)))
+(defn get-right-diagonal [size]
+  (next (drop-last (reduce (fn [a b] (conj a (+' (last a) (- size 1)))) [(- size 1) (- size 1)] (range size)))))
 
-(defn get-4x4-columns [board]
-  (apply map vector (get-4x4-rows board)))
+(defn get-nxn-columns [board size])
+
+(defn get-columns [board size]
+  (apply map vector (get-rows board size)))
 
 (defn- symbols-at [board positions]
   (map (fn [position] (nth board position)) positions))
 
-(defn get-diagonals [board]
-  [(symbols-at board [0 4 8])
-   (symbols-at board [2 4 6])])
+(defn get-diagonals [board size]
+  [(symbols-at board (get-left-diagonal size))
+   (symbols-at board (get-right-diagonal size))])
 
-(defn get-4x4-diagonals [board]
- [(symbols-at board [0 5 10 15])
-  (symbols-at board [3 6 9 12])])
-
-(defn join-sections [board]
-  (concat (get-rows board) (concat (get-columns board)) (concat (get-diagonals board))))
-
-(defn join-4x4-sections [board]
-  (concat (get-4x4-rows board) (concat (get-4x4-columns board)) (concat (get-4x4-diagonals board))))
+(defn join-sections [board size]
+  (concat (get-rows board size) (concat (get-columns board size)) (concat (get-diagonals board size))))
 
 (defn symbols-equal? [section symbol]
   (every? #{symbol} section))
 
-(defn three-aligned? [board symbol]
-  (some true? (for [section (join-sections board)] (symbols-equal? section symbol))))
-
-(defn four-aligned? [board symbol]
-  (some true? (for [section (join-4x4-sections board)] (symbols-equal? section symbol))))
+(defn n-aligned? [board symbol size]
+  (some true? (for [section (join-sections board size)] (symbols-equal? section symbol))))
 
 (defn board-full? [board]
   (if (some #{"_"} board) false true))
 
 (def end-game "Game is over")
 
-(defn game-over? [board symbol1 symbol2]
-  (or (three-aligned? board symbol1) (three-aligned? board symbol2) (board-full? board)))
-
-(defn game-over-4x4? [board symbol1 symbol2]
-  (or (four-aligned? board symbol1) (four-aligned? board symbol2) (board-full? board)))
+(defn game-over? [board symbol1 symbol2 size]
+  (or (n-aligned? board symbol1 size) (n-aligned? board symbol2 size) (board-full? board)))
 
 (defn get-empty-spots [board]
   (remove #{"_"} (flatten (find-empty-spots board))))
-
-(defn evaluate-board [board current-player opponent]
-  (cond
-    (three-aligned? board current-player) 10
-    (three-aligned? board opponent) -10
-    :else 0))
 
 (def start-depth 0)
 
 (def max-depth 4)
 
-(defn evaluate-4x4-board [board current-player opponent depth]
+(defn evaluate-board [board current-player opponent depth size]
   (cond
     (= depth max-depth) 0
-    (four-aligned? board current-player) 10
-    (four-aligned? board opponent) -10
+    (n-aligned? board current-player size) 10
+    (n-aligned? board opponent size) -10
     :else 0))
 
-(defn minimax [board maximising-player minimising-player depth]
-    (if (or (= depth max-depth) (game-over-4x4? board maximising-player minimising-player))
-      (evaluate-4x4-board board maximising-player minimising-player depth)
-          (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player (inc depth)))))))
+(defn minimax [board maximising-player minimising-player depth size]
+    (if (or (= depth max-depth) (game-over? board maximising-player minimising-player size))
+      (evaluate-board board maximising-player minimising-player depth size)
+          (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player (inc depth) size))))))
 
-(defn score-move [board position current-player opponent depth]
-  {position (minimax (set-position board position current-player) current-player opponent depth)})
+(defn score-move [board position current-player opponent depth size]
+  {position (minimax (set-position board position current-player) current-player opponent depth size)})
 
-(defn scored-moves [board current-player opponent depth]
+(defn scored-moves [board current-player opponent depth size]
   (let [empty-spots (get-empty-spots board)]
-    (into (sorted-map) (map #(score-move board % current-player opponent depth) empty-spots))))
+    (into (sorted-map) (map #(score-move board % current-player opponent depth size) empty-spots))))
 
-(defn choose-best-move [board current-player opponent depth]
-  (key (apply max-key val (scored-moves board current-player opponent depth))))
+(defn choose-best-move [board current-player opponent depth size]
+  (key (apply max-key val (scored-moves board current-player opponent depth size))))
 
-(defn get-computer-position [board current-player opponent depth]
-  (choose-best-move board current-player opponent depth))
+(defn get-computer-position [board current-player opponent depth size]
+  (choose-best-move board current-player opponent depth size))
 
 (defprotocol Player
   (get-symbol [this])
@@ -200,7 +183,7 @@
 
 (defn next-player-turn [board current-player opponent]
   (display-board board)
-  (if (game-over-4x4? board (get-symbol opponent) (get-symbol current-player))
+  (if (game-over? board (get-symbol opponent) (get-symbol current-player))
     (println end-game)
     (recur
       (set-position board

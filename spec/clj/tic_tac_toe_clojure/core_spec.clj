@@ -169,44 +169,60 @@
       (with-in-str "5" (pick-board-size "Fake prompt")))))
 
 (describe "A decision engine"
-  (it "gets the rows from a board"
+  (it "gets the rows from a 3x3 board"
     (should= [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
       (get-rows ["X" "_" "_"
                  "O" "_" "_"
-                 "X" "_" "_"])))
+                 "X" "_" "_"] 3)))
 
  (it "gets the rows from a 4x4 board"
    (should= [["X" "_" "_" "_"] ["O" "_" "_" "_"] ["X" "_" "_" "_"] ["O" "_" "_" "_"]]
-     (get-4x4-rows ["X" "_" "_" "_"
-                    "O" "_" "_" "_"
-                    "X" "_" "_" "_"
-                    "O" "_" "_" "_"])))
+     (get-rows ["X" "_" "_" "_"
+                "O" "_" "_" "_"
+                "X" "_" "_" "_"
+                "O" "_" "_" "_"] 4)))
 
   (it "gets the columns from a board"
     (should= [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
       (get-columns ["X" "O" "X"
                     "_" "_" "_"
-                    "_" "_" "_"])))
+                    "_" "_" "_"] 3)))
 
   (it "gets the columns from a 4x4 board"
     (should= [["X" "_" "_" "_"] ["O" "_" "_" "_"] ["X" "_" "_" "_"] ["O" "_" "_" "_"]]
-      (get-4x4-columns ["X" "O" "X" "O"
-                        "_" "_" "_" "_"
-                        "_" "_" "_" "_"
-                        "_" "_" "_" "_"])))
+      (get-columns ["X" "O" "X" "O"
+                    "_" "_" "_" "_"
+                    "_" "_" "_" "_"
+                    "_" "_" "_" "_"] 4)))
 
-  (it "gets the diagonals from a board"
+  (it "should return a vector with the indices of the cells in a left to right diagonal for a 4x4 board"
+    (should= [0 5 10 15]
+      (get-left-diagonal 4)))
+
+  (it "should return a vector with the indices of the cells in a left to right diagonal for a 5x5 board"
+    (should= [0 6 12 18 24]
+      (get-left-diagonal 5)))
+
+  (it "should return a vector with the indices of the cells in a right to left diagonal for a 4x4 board"
+    (should= [3 6 9 12]
+      (get-right-diagonal 4)))
+
+  (it "should return a vector with the indices of the cells in a right to left diagonal for a 5x5 board"
+    (should= [4 8 12 16 20]
+      (get-right-diagonal 5)))
+
+  (it "gets the diagonals from a 3x3 board"
       (should= [["X" "O" "X"] ["O" "O" "O"]]
         (get-diagonals ["X" "_" "O"
                         "_" "O" "_"
-                        "O" "_" "X"])))
+                        "O" "_" "X"] 3)))
 
   (it "gets the diagonals from a 4x4 board"
       (should= [["X" "X" "X" "X"] ["O" "O" "O" "O"]]
-        (get-4x4-diagonals ["X" "_" "_" "O"
-                            "_" "X" "O" "_"
-                            "_" "O" "X" "_"
-                            "O" "_" "_" "X"])))
+        (get-diagonals ["X" "_" "_" "O"
+                        "_" "X" "O" "_"
+                        "_" "O" "X" "_"
+                        "O" "_" "_" "X"] 4)))
 
   (it "joins the rows, columns and diagonals"
     (should=
@@ -215,17 +231,17 @@
        ["X" "X" "X"] ["O" "X" "O"]]
       (join-sections ["X" "_" "O"
                       "_" "X" "_"
-                      "O" "_" "X"])))
+                      "O" "_" "X"] 3)))
 
   (it "joins the rows, columns and diagonals for a 4x4 board"
     (should=
       [["X" "_" "_" "O"] ["_" "X" "O" "_"] ["_" "O" "X" "_"] ["O" "_" "_" "X"]
        ["X" "_" "_" "O"] ["_" "X" "O" "_"] ["_" "O" "X" "_"] ["O" "_" "_" "X"]
        ["X" "X" "X" "X"] ["O" "O" "O" "O"]]
-      (join-4x4-sections ["X" "_" "_" "O"
+      (join-sections ["X" "_" "_" "O"
                       "_" "X" "O" "_"
                       "_" "O" "X" "_"
-                      "O" "_" "_" "X"])))
+                      "O" "_" "_" "X"] 4)))
 
   (it "returns true if the symbols are equal for a 3x3 board"
     (should= true
@@ -253,16 +269,16 @@
 
   (it "checks if three symbols are aligned"
     (should= true
-      (three-aligned? ["X" "_" "O"
+      (n-aligned? ["X" "_" "O"
                        "_" "X" "_"
-                       "O" "_" "X"] "X")))
+                       "O" "_" "X"] "X" 3)))
 
   (it "checks if three symbols are aligned"
     (should= true
-      (four-aligned? ["X" "_" "_" "_"
+      (n-aligned? ["X" "_" "_" "_"
                        "_" "X" "_" "_"
                        "_" "_" "X" "_"
-                       "_" "_" "_" "X"] "X")))
+                       "_" "_" "_" "X"] "X" 4)))
 
   (it "returns true if a 3x3 board is full"
     (should= true
@@ -294,40 +310,39 @@
     (should= true
       (game-over? ["X" "_" "O"
                    "_" "X" "_"
-                   "O" "_" "X"] "X" "O")))
+                   "O" "_" "X"] "X" "O" 3)))
 
   (it "returns true if the game is over because the board is full"
     (should= true
       (game-over? ["X" "O" "X"
                    "O" "X" "O"
-                   "X" "O" "X"] "X" "O")))
+                   "X" "O" "X"] "X" "O" 3)))
 
   (it "returns false if the game is not over and no three symbols are aligned"
    (should= false
      (game-over? ["X" "_" "O"
                   "_" "_" "_"
-                  "O" "_" "X"] "X" "O")))
+                  "O" "_" "X"] "X" "O" 3)))
 
  (it "returns true if the game is over because four symbols are aligned"
    (should= true
-     (game-over-4x4? ["X" "O" "X" "X"
+     (game-over? ["X" "O" "X" "X"
                       "O" "X" "_" "O"
                       "X" "O" "X" "X"
-                      "X" "O" "X" "X"] "X" "O")))
+                      "X" "O" "X" "X"] "X" "O" 4)))
 
  (it "returns true if the game is over because the 4x4 board is full"
    (should= true
-     (game-over-4x4? ["X" "O" "X" "X"
+     (game-over? ["X" "O" "X" "X"
                       "O" "X" "X" "O"
                       "X" "O" "O" "X"
-                      "X" "O" "X" "X"] "X" "O")))
+                      "X" "O" "X" "X"] "X" "O" 4)))
 
   (it "returns false if the game is not over and no four symbols are aligned"
    (should= false
-     (game-over-4x4? ["X" "O" "X" "X"
+     (game-over? ["X" "O" "X" "X"
                       "O" "_" "_" "_"
                       "X" "O" "_" "X"
-                      "_" "O" "X" "X"] "X" "O"))))
 
 (describe "A game"
   (it "tests a Human VS Human game"
@@ -458,112 +473,112 @@
     (should= 8
       (get-computer-position ["O" "_" "X"
                               "O" "_" "X"
-                              "X" "_" "_"] "X" "O" 0)))
+                              "X" "_" "_"] "X" "O" 0 3)))
 
   (it "returns a winning position for player X when there are three spots left"
     (should= 6
       (get-computer-position ["O" "X" "_"
                               "O" "O" "_"
-                              "_" "X" "X"] "X" "O" 0)))
+                              "_" "X" "X"] "X" "O" 0 3)))
 
   (it "returns a position and positive score when a winning position is available"
     (should= 8
       (get-computer-position ["O" "X" "X"
                               "O" "O" "X"
-                              "X" "O" "_"] "X" "O" 0)))
+                              "X" "O" "_"] "X" "O" 0 3)))
 
   (it "returns a position and negative score when the opponent is in a winning position"
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "O" "O" "_"] "X" "O" 0)))
+                              "O" "O" "_"] "X" "O" 0 3)))
 
   (it "returns a position and 0 when the game is a draw"
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "X" "O" "_"] "X" "O" 0)))
+                              "X" "O" "_"] "X" "O" 0 3)))
 
   (it "returns a score of 10 if the game is a win"
     (should= 10
       (evaluate-board ["X" "_" "_"
                        "X" "O" "O"
-                       "X" "_" "_"] "X" "O")))
+                       "X" "_" "_"] "X" "O" 3 3)))
 
   (it "returns a score of -10 if the game is a loss"
     (should= -10
       (evaluate-board ["X" "_" "_"
                        "O" "O" "O"
-                       "X" "_" "_"] "X" "O")))
+                       "X" "_" "_"] "X" "O" 3 3)))
 
   (it "returns a score of zero if the game is a draw"
     (should= 0
       (evaluate-board ["X" "X" "O"
                        "O" "O" "X"
-                       "X" "O" "_"] "X" "O")))
+                       "X" "O" "_"] "X" "O" 3 3)))
 
   (it "returns a score of 10 if the game is a win"
    (should= 10
-     (evaluate-4x4-board ["X" "X" "X" "X"
-                          "O" "X" "_" "O"
-                          "X" "O" "X" "X"
-                          "X" "O" "X" "X"] "X" "O" 0)))
+     (evaluate-board ["X" "X" "X" "X"
+                      "O" "X" "_" "O"
+                      "X" "O" "X" "X"
+                      "X" "O" "X" "X"] "X" "O" 0 4)))
 
   (it "returns a score of -10 if the game is a loss"
    (should= -10
-     (evaluate-4x4-board ["X" "O" "X" "X"
-                          "O" "O" "_" "O"
-                          "X" "O" "X" "X"
-                          "X" "O" "X" "X"] "X" "O" 0)))
+     (evaluate-board ["X" "O" "X" "X"
+                      "O" "O" "_" "O"
+                      "X" "O" "X" "X"
+                      "X" "O" "X" "X"] "X" "O" 0 4)))
 
   (it "returns a score of zero if the game is a draw"
    (should= 0
-     (evaluate-4x4-board ["X" "O" "X" "X"
-                          "O" "X" "_" "O"
-                          "X" "O" "O" "X"
-                          "X" "O" "X" "X"] "X" "O" 0)))
-
+     (evaluate-board ["X" "O" "X" "X"
+                      "O" "X" "_" "O"
+                      "X" "O" "O" "X"
+                      "X" "O" "X" "X"] "X" "O" 0 4)))
+;
   (it "returns a hash that includes the position and the score of the move when there is a winning move"
     (should= {5 10}
       (score-move ["O" "X" "X"
                    "O" "_" "_"
-                   "_" "O" "X"] 5 "X" "O" 0)))
+                   "_" "O" "X"] 5 "X" "O" 0 3)))
 
   (it "returns a hash that includes the position and the score of the move when there is a neutral move"
     (should= {4 0}
       (score-move ["X" "O" "X"
                    "O" "_" "_"
-                   "_" "X" "O"] 4 "X" "O" 0)))
+                   "_" "X" "O"] 4 "X" "O" 0 3)))
 
   (it "returns a hash that includes the position and the score of the move when there is a losing move"
     (should= {4 -10}
       (score-move ["O" "X" "X"
                    "O" "_" "_"
-                   "O" "O" "X"] 4 "X" "O" 0)))
+                   "O" "O" "X"] 4 "X" "O" 0 3)))
 
   (it "returns a list of scored positions in hashes"
     (should= {3 0, 4 -10, 5 10}
       (scored-moves ["O" "X" "X"
                      "_" "_" "_"
-                     "O" "O" "X"] "X" "O" 0)))
+                     "O" "O" "X"] "X" "O" 0 3)))
 
   (it "returns an empty list if the board is full"
     (should= {}
       (scored-moves ["O" "X" "X"
                      "X" "O" "O"
-                     "O" "O" "X"] "X" "O" 0)))
-
+                     "O" "O" "X"] "X" "O" 0 3)))
+;
   (it "returns a winning position for the maximising player"
     (should= 5
       (choose-best-move ["O" "X" "X"
                          "_" "_" "_"
-                         "O" "O" "X"] "X" "O" 0)))
+                         "O" "O" "X"] "X" "O" 0 3)))
 
   (it "returns a position that will make the maximising player lose"
     (should= 3
       (choose-best-move ["O" "X" "X"
                          "_" "_" "_"
-                         "O" "O" "X"] "O" "X" 0)))
+                         "O" "O" "X"] "O" "X" 0 3)))
 
   (it "returns a position that will make the maximising player lose"
     (should= 5
