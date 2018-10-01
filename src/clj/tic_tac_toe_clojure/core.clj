@@ -45,7 +45,7 @@
 
 (def invalid-position-selection "This number is invalid, please enter a number between 0 and 8 ")
 
-(def invalid-4x4-position-selection "This number is invalid, please enter a number between 0 and 8: ")
+(def invalid-4x4-position-selection "This number is invalid, please enter a number between 0 and 15: ")
 
 (def select-board-size "Please enter a number greater than 0 to determine the size of your board: ")
 
@@ -71,11 +71,11 @@
 
 (defn get-human-position [board prompt]
   (let [user-input (prompt-user prompt)]
-      (if (valid-position-selection? user-input)
+      (if (valid-4x4-position-selection? user-input)
           (if (position-empty? board (Integer/parseInt user-input))
                 (Integer/parseInt user-input)
                 (get-human-position board occupied-position))
-          (get-human-position board invalid-position-selection))))
+          (get-human-position board invalid-4x4-position-selection))))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
@@ -219,4 +219,4 @@
   (let [player-1 (get-player "X" select-first-player)
         player-2 (get-player "O" select-opponent)]
     (display-board numbered-4x4-board)
-    (next-player-turn (create-board) player-1 player-2)))
+    (next-player-turn (create-4x4-board) player-1 player-2)))
