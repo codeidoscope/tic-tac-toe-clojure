@@ -227,29 +227,29 @@
                       "_" "O" "X" "_"
                       "O" "_" "_" "X"])))
 
-  (it "returns true if the symbols are equal"
+  (it "returns true if the symbols are equal for a 3x3 board"
     (should= true
       (symbols-equal? ["X" "X" "X"] "X")))
 
-  (it "returns false if the symbols are not equal"
+  (it "returns false if the symbols are not equal for a 3x3 board"
     (should= false
       (symbols-equal? ["X" "_" "X"] "X")))
 
-  (it "returns false if there are no symbols"
+  (it "returns false if there are no symbols for a 3x3 board"
     (should= false
       (symbols-equal? ["_" "_" "_"] "X")))
 
-  (it "returns true if the symbols are equal"
+  (it "returns true if the symbols are equal for a 4x4 board"
     (should= true
-      (symbols-4x4-equal? ["X" "X" "X" "X"] "X")))
+      (symbols-equal? ["X" "X" "X" "X"] "X")))
 
-  (it "returns false if the symbols are not equal"
+  (it "returns false if the symbols are not equal for a 4x4 board"
     (should= false
-      (symbols-4x4-equal? ["X" "_" "X" "_"] "X")))
+      (symbols-equal? ["X" "_" "X" "_"] "X")))
 
-  (it "returns false if there are no symbols"
+  (it "returns false if there are no symbols for a 4x4 board"
     (should= false
-      (symbols-4x4-equal? ["_" "_" "_" "_"] "X")))
+      (symbols-equal? ["_" "_" "_" "_"] "X")))
 
   (it "checks if three symbols are aligned"
     (should= true
