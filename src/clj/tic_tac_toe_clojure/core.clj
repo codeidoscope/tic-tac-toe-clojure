@@ -149,29 +149,34 @@
     (three-aligned? board opponent) -10
     :else 0))
 
-(defn evaluate-4x4-board [board current-player opponent]
+(def start-depth 0)
+
+(def max-depth 4)
+
+(defn evaluate-4x4-board [board current-player opponent depth]
   (cond
+    (= depth max-depth) 0
     (four-aligned? board current-player) 10
     (four-aligned? board opponent) -10
     :else 0))
 
-(defn minimax [board maximising-player minimising-player]
-    (if (game-over-4x4? board maximising-player minimising-player)
-      (evaluate-4x4-board board maximising-player minimising-player)
-      (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player))))))
+(defn minimax [board maximising-player minimising-player depth]
+    (if (or (= depth max-depth) (game-over-4x4? board maximising-player minimising-player))
+      (evaluate-4x4-board board maximising-player minimising-player depth)
+          (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player (inc depth)))))))
 
-(defn score-move [board position current-player opponent]
-  {position (minimax (set-position board position current-player) current-player opponent)})
+(defn score-move [board position current-player opponent depth]
+  {position (minimax (set-position board position current-player) current-player opponent depth)})
 
-(defn scored-moves [board current-player opponent]
+(defn scored-moves [board current-player opponent depth]
   (let [empty-spots (get-empty-spots board)]
-    (into (sorted-map) (map #(score-move board % current-player opponent) empty-spots))))
+    (into (sorted-map) (map #(score-move board % current-player opponent depth) empty-spots))))
 
-(defn choose-best-move [board current-player opponent]
-  (key (apply max-key val (scored-moves board current-player opponent))))
+(defn choose-best-move [board current-player opponent depth]
+  (key (apply max-key val (scored-moves board current-player opponent depth))))
 
-(defn get-computer-position [board current-player opponent]
-  (choose-best-move board current-player opponent))
+(defn get-computer-position [board current-player opponent depth]
+  (choose-best-move board current-player opponent depth))
 
 (defprotocol Player
   (get-symbol [this])
@@ -189,7 +194,7 @@
   Player
   (get-symbol [this] symbol)
   (get-move [this board opponent]
-    (get-computer-position board symbol (get-symbol opponent))))
+    (get-computer-position board symbol (get-symbol opponent) start-depth)))
 
 (defn make-computer-player [symbol] (ComputerPlayer. symbol))
 
