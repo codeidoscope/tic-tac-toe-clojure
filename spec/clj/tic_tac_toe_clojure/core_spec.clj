@@ -16,18 +16,18 @@
                 (all-computer-boards board-with-computer-move human-player computer-player)))))))))
 
 (describe "A board"
-  (it "has 9 cells"
+  (it "has 9 cells for a 3x3 board"
     (should= ["_" "_" "_"
               "_" "_" "_"
               "_" "_" "_"]
-      (create-board)))
+      (create-board 3)))
 
-  (it "has 16 cells"
+  (it "has 16 cells for a 4x4 board"
     (should= ["_" "_" "_" "_"
               "_" "_" "_" "_"
               "_" "_" "_" "_"
               "_" "_" "_" "_"]
-      (create-4x4-board)))
+      (create-board 4)))
 
   (it "has the number of cells passed to the function"
     (should= ["_" "_" "_" "_" "_"
@@ -35,7 +35,7 @@
               "_" "_" "_" "_" "_"
               "_" "_" "_" "_" "_"
               "_" "_" "_" "_" "_"]
-      (create-sized-board 5)))
+      (create-board 5)))
 
   (it "creates a numbered board given a specific size"
     (should= ["0" "1" "2" "3" "4"
@@ -43,41 +43,78 @@
               "10" "11" "12" "13" "14"
               "15" "16" "17" "18" "19"
               "20" "21" "22" "23" "24"]
-      (numbered-sized-board (create-sized-board 5))))
+      (numbered-board 5)))
 
   (it "sets a X mark at the correct position"
     (should= ["X" "_" "_"
               "_" "_" "_"
               "_" "_" "_"]
-      (set-position (create-board) 0 "X")))
+      (set-position (create-board 3) 0 "X")))
 
   (it "sets an X mark followed by an O mark in the correct positions"
     (should= ["X" "O" "_"
               "_" "_" "_"
               "_" "_" "_"]
-      (set-position (set-position (create-board) 0 "X") 1 "O")))
+      (set-position (set-position (create-board 3) 0 "X") 1 "O")))
 
   (it "sets an O mark in the correct position"
-    (should=
-      ["O" "_" "_"
-       "_" "_" "_"
-       "_" "_" "_"]
-      (set-position (create-board) 0 "O")))
+    (should= ["O" "_" "_"
+              "_" "_" "_"
+              "_" "_" "_"]
+      (set-position (create-board 3) 0 "O")))
+
+
+  (it "adds pipe signs between numbers for a 4x4 board"
+    (should= [["0" " | " "1" " | " "2" " | " "3"]
+              ["4" " | " "5" " | " "6" " | " "7"]
+              ["8" " | " "9" " | " "10" " | " "11"]
+              ["12" " | " "13" " | " "14" " | " "15"]]
+    (insert-pipe-sign (numbered-board 4) 4)))
+
+  (it "inserts dividers between rows for a 4x4 board"
+    (should= [["0" " | " "1" " | " "2" " | " "3"]
+              "\n-------------\n"
+              ["4" " | " "5" " | " "6" " | " "7"]
+              "\n-------------\n"
+              ["8" " | " "9" " | " "10" " | " "11"]
+              "\n-------------\n"
+              ["12" " | " "13" " | " "14" " | " "15"]]
+    (insert-dividers (numbered-board 4) 4)))
+
+  (it "generates a divider of the same length as a piped row"
+    (should= "\n-------------\n"
+      (generate-divider (numbered-board 4) 4)))
 
   (it "is displayed on three lines with separators when empty"
     (should=
-      "_ | _ | _\n---------\n_ | _ | _\n---------\n_ | _ | _\n---------\n"
-      (format-board (create-board))))
+      "_ | _ | _\n---------\n_ | _ | _\n---------\n_ | _ | _"
+      (format-board (create-board 3) 3)))
 
   (it "is displayed on three lines with separators when numbered"
     (should=
-      "0 | 1 | 2\n---------\n3 | 4 | 5\n---------\n6 | 7 | 8\n---------\n"
-      (format-board numbered-board)))
+      "0 | 1 | 2\n---------\n3 | 4 | 5\n---------\n6 | 7 | 8"
+      (format-board (numbered-board 3) 3)))
 
   (it "is displayed on four lines and four columns with separators when numbered"
     (should=
-      "0 | 1 | 2 | 3\n--------------\n4 | 5 | 6 | 7\n--------------\n8 | 9 | 10 | 11\n--------------\n12 | 13 | 14 | 15\n--------------\n"
-      (format-4x4-board numbered-4x4-board))))
+      "0 | 1 | 2 | 3\n-------------\n4 | 5 | 6 | 7\n-------------\n8 | 9 | 10 | 11\n-------------\n12 | 13 | 14 | 15"
+      (format-board (numbered-board 4) 4)))
+
+  (it "prompts the user to choose a position within the range of a 5x5 board"
+    (should= "Please choose a position between 0 and 24: "
+    (select-position ["0" "1" "2" "3" "4"
+                      "5" "6" "7" "8" "9"
+                      "10" "11" "12" "13" "14"
+                      "15" "16" "17" "18" "19"
+                      "20" "21" "22" "23" "24"])))
+
+  (it "prompts the user to choose another position within the range of a 5x5 board"
+    (should= "This number is invalid, please enter a number between 0 and 24: "
+    (invalid-position-selection ["0" "1" "2" "3" "4"
+                      "5" "6" "7" "8" "9"
+                      "10" "11" "12" "13" "14"
+                      "15" "16" "17" "18" "19"
+                      "20" "21" "22" "23" "24"]))))
 
 (describe "A UI"
   (it "prompts a player to pick a symbol"
@@ -88,7 +125,13 @@
     (should= 1
       (with-in-str "1" (get-human-position ["O" "_" "_"
                                             "_" "X" "_"
-                                            "_" "_" "_"] "Fake prompt "))))
+                                            "_" "_" "_"]
+
+                                            ["0" "1" "2"
+                                             "3" "4" "5"
+                                             "6" "7" "8"]
+
+                                            "Fake prompt "))))
 
   (it "returns true when a position is empty"
     (should= true
@@ -106,43 +149,72 @@
     (should= 3
       (with-in-str "3" (get-human-position ["O" "_" "_"
                                             "_" "X" "_"
-                                            "_" "_" "_"] "Fake prompt "))))
+                                            "_" "_" "_"]
+
+                                            ["0" "1" "2"
+                                             "3" "4" "5"
+                                             "6" "7" "8"]
+
+                                             "Fake prompt "))))
 
   (it "returns true if the input for position selection is valid"
     (should= true
-      (valid-position-selection? "1")))
+      (valid-position-selection? "1" ["0" "1" "2"
+                                      "3" "4" "5"
+                                      "6" "7" "8"])))
 
   (it "returns false if the input for position selection is invalid because beyond range"
     (should= false
-      (valid-position-selection? "9")))
+      (valid-position-selection? "9" ["0" "1" "2"
+                                      "3" "4" "5"
+                                      "6" "7" "8"])))
 
   (it "returns false if the input for position selection is invalid because too long"
     (should= false
-      (valid-position-selection? "1234")))
+      (valid-position-selection? "1234" ["0" "1" "2"
+                                         "3" "4" "5"
+                                         "6" "7" "8"])))
 
   (it "returns false if the input for position selection is invalid because not numerical"
     (should= false
-      (valid-position-selection? "g")))
+      (valid-position-selection? "g" ["0" "1" "2"
+                                      "3" "4" "5"
+                                      "6" "7" "8"])))
 
   (it "returns true if the input for position selection is valid on 4x4 board on 4x4 board"
     (should= true
-      (valid-4x4-position-selection? "1")))
+      (valid-position-selection? "1" ["0" "1" "2" "3"
+                                          "4" "5" "6" "7"
+                                          "8" "9" "10" "11"
+                                          "12" "13" "14" "15"])))
 
   (it "returns false if the input for position selection is invalid because beyond range on 4x4 board"
     (should= false
-      (valid-4x4-position-selection? "16")))
+      (valid-position-selection? "16" ["0" "1" "2" "3"
+                                           "4" "5" "6" "7"
+                                           "8" "9" "10" "11"
+                                           "12" "13" "14" "15"])))
 
   (it "returns false if the input for positive position selection is invalid because beyond range on 4x4 board"
     (should= false
-      (valid-4x4-position-selection? "-1")))
+      (valid-position-selection? "-1" ["0" "1" "2" "3"
+                                           "4" "5" "6" "7"
+                                           "8" "9" "10" "11"
+                                           "12" "13" "14" "15"])))
 
   (it "returns false if the input for position selection is invalid because too long on 4x4 board"
     (should= false
-      (valid-4x4-position-selection? "1234")))
+      (valid-position-selection? "1234" ["0" "1" "2" "3"
+                                             "4" "5" "6" "7"
+                                             "8" "9" "10" "11"
+                                             "12" "13" "14" "15"])))
 
   (it "returns false if the input for position selection is invalid because not numerical on 4x4 board"
     (should= false
-      (valid-4x4-position-selection? "g")))
+      (valid-position-selection? "g" ["0" "1" "2" "3"
+                                          "4" "5" "6" "7"
+                                          "8" "9" "10" "11"
+                                          "12" "13" "14" "15"])))
 
   (it "returns true if the input for player selection is valid with an uppercase letter"
     (should= true

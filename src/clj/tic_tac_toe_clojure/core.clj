@@ -4,58 +4,49 @@
 (declare start-game)
 (declare scored-moves)
 (declare score-move)
+(declare get-rows)
 
 (defn -main [& args]
   (println "Starting game")
   (start-game))
 
-(defn create-board []
-  (into [] (repeat 9 "_")))
-
-(defn create-4x4-board []
-  (into [] (repeat 16 "_")))
-
-(defn create-sized-board [size]
+(defn create-board [size]
   (into [] (repeat (* size size) "_")))
 
-(def numbered-board
-  ["0" "1" "2" "3" "4" "5" "6" "7" "8"])
+(defn numbered-board [size]
+  (for [cell (take (* size size) (range))] (str cell)))
 
-(def numbered-4x4-board
-  ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15"])
+(defn insert-pipe-sign [board size]
+  (let [rows (get-rows board size)]
+    (for [row rows] (interpose " | " row))))
 
-(defn numbered-sized-board [board]
-  (let [size (count board)]
-    (for [cell (take size (range))] (str cell))))
+(defn generate-divider [board size]
+  (let [piped-rows (insert-pipe-sign board size)]
+    (str "\n" (string/join (repeat (count (apply str (nth piped-rows 0))) "-")) "\n")))
 
-(defn format-board [board]
-  (apply str (flatten (for [part (partition 3 board)] (flatten (map vector part '(" | " " | " "\n---------\n")))))))
+(defn insert-dividers [board size]
+  (interpose (generate-divider board size) (insert-pipe-sign board size)))
 
-(defn format-4x4-board [board]
-  (apply str (flatten (for [part (partition 4 board)] (flatten (map vector part '(" | " " | " " | " "\n--------------\n")))))))
+(defn format-board [board size]
+  (string/join (flatten (insert-dividers board size))))
 
-(defn display-board [board]
-  (print (format-4x4-board board)))
+(defn display-board [board size]
+  (print (format-board board size) "\n\n"))
 
-(def select-position "Please choose a position between 0 and 8: ")
-
-(def select-4x4-position "Please choose a position between 0 and 15: ")
+(defn select-position [board]
+  (str "Please choose a position between " (first board) " and " (last board)": "))
 
 (def occupied-position "This position is occupied, please select another: ")
 
-(def invalid-position-selection "This number is invalid, please enter a number between 0 and 8 ")
-
-(def invalid-4x4-position-selection "This number is invalid, please enter a number between 0 and 15: ")
+(defn invalid-position-selection [board]
+  (str "This number is invalid, please enter a number between "(first board)" and "(last board)": "))
 
 (def select-board-size "Please enter a number greater than 0 to determine the size of your board: ")
 
 (def invalid-board-size "This number is invalid, pleaser enter a number greater than 0: ")
 
-(defn valid-position-selection? [input]
-  (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8"])))
-
-(defn valid-4x4-position-selection? [input]
-  (boolean (some #{input} ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15"])))
+(defn valid-position-selection? [input board]
+  (boolean (some #{input} board)))
 
 (defn position-empty? [board position]
   (= (nth board position) "_"))
@@ -99,8 +90,6 @@
 
 (defn get-right-diagonal [size]
   (next (drop-last (reduce (fn [a b] (conj a (+' (last a) (- size 1)))) [(- size 1) (- size 1)] (range size)))))
-
-(defn get-nxn-columns [board size])
 
 (defn get-columns [board size]
   (apply map vector (get-rows board size)))
