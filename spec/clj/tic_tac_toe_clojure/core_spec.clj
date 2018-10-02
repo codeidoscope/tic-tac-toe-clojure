@@ -327,22 +327,23 @@
  (it "returns true if the game is over because four symbols are aligned"
    (should= true
      (game-over? ["X" "O" "X" "X"
-                      "O" "X" "_" "O"
-                      "X" "O" "X" "X"
-                      "X" "O" "X" "X"] "X" "O" 4)))
+                  "O" "X" "_" "O"
+                  "X" "O" "X" "X"
+                  "X" "O" "X" "X"] "X" "O" 4)))
 
  (it "returns true if the game is over because the 4x4 board is full"
    (should= true
      (game-over? ["X" "O" "X" "X"
-                      "O" "X" "X" "O"
-                      "X" "O" "O" "X"
-                      "X" "O" "X" "X"] "X" "O" 4)))
+                  "O" "X" "X" "O"
+                  "X" "O" "O" "X"
+                  "X" "O" "X" "X"] "X" "O" 4)))
 
   (it "returns false if the game is not over and no four symbols are aligned"
    (should= false
      (game-over? ["X" "O" "X" "X"
-                      "O" "_" "_" "_"
-                      "X" "O" "_" "X"
+                  "O" "_" "_" "_"
+                  "X" "O" "_" "X"
+                  "O" "_" "X" "_"] "X" "O" 4))))
 
 (describe "A game"
   (it "tests a Human VS Human game"
@@ -584,7 +585,7 @@
     (should= 5
       (choose-best-move ["O" "X" "X"
                          "X" "_" "_"
-                         "_" "O" "X"] "O" "X" 0)))
+                         "_" "O" "X"] "O" "X" 0 3)))
 
   (it "does not loose"
      (doseq [board (all-computer-boards (create-board) "X" "0")]
