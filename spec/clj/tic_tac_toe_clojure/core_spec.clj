@@ -514,35 +514,36 @@
           output)))
 
   (it "tests a Computer VS Human game"
-      (let [output (with-out-str (with-in-str "c\nh\n4\n6\n5\n1" (start-game)))
-            board-state-1 (create-board)
-            board-state-2 (set-position board-state-1 (get-computer-position board-state-1 "X" "O") "X")
+      (let [output (with-out-str (with-in-str "3\nc\nh\n4\n6\n5\n1" (start-game)))
+            board-state-1 (create-board 3)
+            board-state-2 (set-position board-state-1 (get-computer-position board-state-1 (numbered-board 3) "X" "O" 0 3) "X")
             board-state-3 (set-position board-state-2 4 "O")
-            board-state-4 (set-position board-state-3 (get-computer-position board-state-3 "X" "O") "X")
+            board-state-4 (set-position board-state-3 (get-computer-position board-state-3 (numbered-board 3) "X" "O" 0 3) "X")
             board-state-5 (set-position board-state-4 6 "O")
-            board-state-6 (set-position board-state-5 (get-computer-position board-state-5 "X" "O") "X")
+            board-state-6 (set-position board-state-5 (get-computer-position board-state-5 (numbered-board 3) "X" "O" 0 3) "X")
             board-state-7 (set-position board-state-6 5 "O")
-            board-state-8 (set-position board-state-7 (get-computer-position board-state-7 "X" "O") "X")
+            board-state-8 (set-position board-state-7 (get-computer-position board-state-7 (numbered-board 3) "X" "O" 0 3) "X")
             board-state-9 (set-position board-state-8 1 "O")
-            board-state-10 (set-position board-state-9 (get-computer-position board-state-9 "X" "O") "X")]
+            board-state-10 (set-position board-state-9 (get-computer-position board-state-9 (numbered-board 3) "X" "O" 0 3) "X")]
         (should=
-          (str select-first-player
+          (str select-board-size
+               select-first-player
                select-opponent
-               (format-board numbered-board)
-               (format-board board-state-1)
-               (format-board board-state-2)
-               select-position
-               (format-board board-state-3)
-               (format-board board-state-4)
-               select-position
-               (format-board board-state-5)
-               (format-board board-state-6)
-               select-position
-               (format-board board-state-7)
-               (format-board board-state-8)
-               select-position
-               (format-board board-state-9)
-               (format-board board-state-10)
+               (format-board (numbered-board 3) 3)" \n\n"
+               (format-board board-state-1 3)" \n\n"
+               (format-board board-state-2 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-3 3)" \n\n"
+               (format-board board-state-4 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-5 3)" \n\n"
+               (format-board board-state-6 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-7 3)" \n\n"
+               (format-board board-state-8 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-9 3)" \n\n"
+               (format-board board-state-10 3)" \n\n"
                end-game"\n")
           output))))
 
