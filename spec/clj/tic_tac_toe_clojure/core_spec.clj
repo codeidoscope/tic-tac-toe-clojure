@@ -6,11 +6,11 @@
   (mapcat identity
     (for [spot (get-empty-spots board)]
       (let [board-with-human-move (set-position board spot human-player)]
-        (if (game-over? board-with-human-move human-player computer-player)
+        (if (game-over? board-with-human-move human-player computer-player 3)
           [board-with-human-move]
-          (let [computer-move (choose-best-move board-with-human-move computer-player human-player)
+          (let [computer-move (choose-best-move board-with-human-move computer-player human-player 0 3)
                 board-with-computer-move (set-position board-with-human-move computer-move computer-player)]
-            (if (game-over? board-with-computer-move computer-player human-player)
+            (if (game-over? board-with-computer-move computer-player human-player 3)
               [board-with-human-move board-with-computer-move]
               (concat [board-with-human-move board-with-computer-move]
                 (all-computer-boards board-with-computer-move human-player computer-player)))))))))
@@ -546,31 +546,64 @@
     (should= 8
       (get-computer-position ["O" "_" "X"
                               "O" "_" "X"
-                              "X" "_" "_"] "X" "O" 0 3)))
+                              "X" "_" "_"]
+
+                             ["0" "1" "2"
+                              "3" "4" "5"
+                              "6" "7" "8"]
+
+                             "X" "O" 0 3)))
 
   (it "returns a winning position for player X when there are three spots left"
     (should= 6
       (get-computer-position ["O" "X" "_"
                               "O" "O" "_"
-                              "_" "X" "X"] "X" "O" 0 3)))
+                              "_" "X" "X"]
+
+                              ["0" "1" "2"
+                               "3" "4" "5"
+                               "6" "7" "8"]
+
+                               "X" "O" 0 3)))
 
   (it "returns a position and positive score when a winning position is available"
     (should= 8
       (get-computer-position ["O" "X" "X"
                               "O" "O" "X"
-                              "X" "O" "_"] "X" "O" 0 3)))
+                              "X" "O" "_"]
+
+
+                             ["0" "1" "2"
+                              "3" "4" "5"
+                              "6" "7" "8"]
+
+                             "X" "O" 0 3)))
 
   (it "returns a position and negative score when the opponent is in a winning position"
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "O" "O" "_"] "X" "O" 0 3)))
+                              "O" "O" "_"]
+
+
+                             ["0" "1" "2"
+                              "3" "4" "5"
+                              "6" "7" "8"]
+
+                             "X" "O" 0 3)))
 
   (it "returns a position and 0 when the game is a draw"
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "X" "O" "_"] "X" "O" 0 3)))
+                              "X" "O" "_"]
+
+
+                             ["0" "1" "2"
+                              "3" "4" "5"
+                              "6" "7" "8"]
+
+                             "X" "O" 0 3)))
 
   (it "returns a score of 10 if the game is a win"
     (should= 10
@@ -660,13 +693,12 @@
                          "_" "O" "X"] "O" "X" 0 3)))
 
   (it "does not loose"
-     (doseq [board (all-computer-boards (create-board) "X" "0")]
-       (should (>= 0 (evaluate-board board "O" "X")))))
+     (doseq [board (all-computer-boards (create-board 3) "X" "0")]
+       (should (>= 0 (evaluate-board board "O" "X" 0 3)))))
 
   (it "returns a score of 0 when it reaches the max depth"
     (should= 0
       (minimax ["_" "X" "_" "O"
                 "_" "X" "_" "_"
                 "_" "_" "O" "_"
-                "X" "_" "X" "_"] "X" "O" 0)))
-       )
+                "X" "_" "X" "_"] "X" "O" 0 4))))

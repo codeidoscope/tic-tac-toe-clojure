@@ -60,13 +60,13 @@
         (Integer/parseInt user-input)
         (pick-board-size invalid-board-size))))
 
-(defn get-human-position [board prompt]
+(defn get-human-position [board numbered-board prompt]
   (let [user-input (prompt-user prompt)]
-      (if (valid-4x4-position-selection? user-input)
+      (if (valid-position-selection? user-input numbered-board)
           (if (position-empty? board (Integer/parseInt user-input))
                 (Integer/parseInt user-input)
-                (get-human-position board occupied-position))
-          (get-human-position board invalid-4x4-position-selection))))
+                (get-human-position board numbered-board occupied-position))
+          (get-human-position board numbered-board (invalid-position-selection board)))))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
@@ -147,39 +147,40 @@
 (defn choose-best-move [board current-player opponent depth size]
   (key (apply max-key val (scored-moves board current-player opponent depth size))))
 
-(defn get-computer-position [board current-player opponent depth size]
+(defn get-computer-position [board numbered-board current-player opponent depth size]
   (choose-best-move board current-player opponent depth size))
 
 (defprotocol Player
   (get-symbol [this])
-  (get-move [this board opponent]))
+  (get-move [this board numbered-board opponent size]))
 
 (deftype HumanPlayer [symbol]
   Player
   (get-symbol [this] symbol)
-  (get-move [this board opponent]
-    (get-human-position board select-4x4-position)))
+  (get-move [this board numbered-board opponent size]
+    (get-human-position board numbered-board (select-position numbered-board))))
 
 (defn make-human-player [symbol] (HumanPlayer. symbol))
 
 (deftype ComputerPlayer [symbol]
   Player
   (get-symbol [this] symbol)
-  (get-move [this board opponent]
-    (get-computer-position board symbol (get-symbol opponent) start-depth)))
+  (get-move [this board numbered-board opponent size]
+    (get-computer-position board numbered-board symbol (get-symbol opponent) start-depth size)))
 
 (defn make-computer-player [symbol] (ComputerPlayer. symbol))
 
-(defn next-player-turn [board current-player opponent]
-  (display-board board)
-  (if (game-over? board (get-symbol opponent) (get-symbol current-player))
+(defn next-player-turn [board current-player opponent size]
+  (display-board board size)
+  (if (game-over? board (get-symbol opponent) (get-symbol current-player) size)
     (println end-game)
     (recur
       (set-position board
-                    (get-move current-player board opponent)
+                    (get-move current-player board (numbered-board size) opponent size)
                     (get-symbol current-player))
       opponent
-      current-player)))
+      current-player
+      size)))
 
 (defn get-player [marker prompt]
   (let [player-type (prompt-user prompt)]
@@ -190,7 +191,8 @@
         (get-player marker invalid-player-selection))))
 
 (defn start-game []
-  (let [player-1 (get-player "X" select-first-player)
-        player-2 (get-player "O" select-opponent)]
-    (display-board numbered-4x4-board)
-    (next-player-turn (create-4x4-board) player-1 player-2)))
+  (let [board-size (pick-board-size select-board-size)]
+    (let [player-1 (get-player "X" select-first-player)
+          player-2 (get-player "O" select-opponent)]
+      (display-board (numbered-board board-size) board-size)
+      (next-player-turn (create-board board-size) player-1 player-2 board-size))))
