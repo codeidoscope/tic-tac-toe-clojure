@@ -419,28 +419,29 @@
 
 (describe "A game"
   (it "tests a Human VS Human game"
-      (let [output (with-out-str (with-in-str "h\nh\n0\n2\n3\n5\n6" (start-game)))
-            board-state-1 (create-board)
+      (let [output (with-out-str (with-in-str "3\nh\nh\n0\n2\n3\n5\n6" (start-game)))
+            board-state-1 (create-board 3)
             board-state-2 (set-position board-state-1 0 "X")
             board-state-3 (set-position board-state-2 2 "O")
             board-state-4 (set-position board-state-3 3 "X")
             board-state-5 (set-position board-state-4 5 "O")
             board-state-6 (set-position board-state-5 6 "X")]
         (should=
-          (str select-first-player
+          (str select-board-size
+               select-first-player
                select-opponent
-               (format-board numbered-board)
-               (format-board board-state-1)
-               select-position
-               (format-board board-state-2)
-               select-position
-               (format-board board-state-3)
-               select-position
-               (format-board board-state-4)
-               select-position
-               (format-board board-state-5)
-               select-position
-               (format-board board-state-6)
+               (format-board (numbered-board 3) 3)" \n\n"
+               (format-board board-state-1 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-2 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-3 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-4 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-5 3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-6 3)" \n\n"
                end-game"\n")
           output)))
 
