@@ -10,6 +10,12 @@
   (println "Starting game")
   (start-game))
 
+(defn get-square [number]
+  (* number number))
+
+(defn get-square-root [board]
+  (int (Math/sqrt (count board))))
+
 (defn create-board [size]
   (into [] (repeat (* size size) "_")))
 

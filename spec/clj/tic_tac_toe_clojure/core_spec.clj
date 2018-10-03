@@ -16,6 +16,17 @@
                 (all-computer-boards board-with-computer-move human-player computer-player)))))))))
 
 (describe "A board"
+  (it "gets the square of a number"
+    (should= 25
+      (get-square 5)))
+
+  (it "gets the square root of a board"
+    (should= 4
+      (get-square-root ["_" "_" "_" "_"
+                        "_" "_" "_" "_"
+                        "_" "_" "_" "_"
+                        "_" "_" "_" "_"])))
+
   (it "has 9 cells for a 3x3 board"
     (should= ["_" "_" "_"
               "_" "_" "_"
