@@ -17,27 +17,27 @@
   (int (Math/sqrt (count board))))
 
 (defn create-board [size]
-  (into [] (repeat (* size size) "_")))
+  (into [] (repeat (get-square size) "_")))
 
 (defn numbered-board [size]
-  (for [cell (take (* size size) (range))] (str cell)))
+  (for [cell (take (get-square size) (range))] (str cell)))
 
-(defn insert-pipe-sign [board size]
-  (let [rows (get-rows board size)]
+(defn insert-pipe-sign [board]
+  (let [rows (get-rows board)]
     (for [row rows] (interpose " | " row))))
 
-(defn generate-divider [board size]
-  (let [piped-rows (insert-pipe-sign board size)]
+(defn generate-divider [board]
+  (let [piped-rows (insert-pipe-sign board)]
     (str "\n" (string/join (repeat (count (apply str (nth piped-rows 0))) "-")) "\n")))
 
-(defn insert-dividers [board size]
-  (interpose (generate-divider board size) (insert-pipe-sign board size)))
+(defn insert-dividers [board]
+  (interpose (generate-divider board) (insert-pipe-sign board)))
 
-(defn format-board [board size]
-  (string/join (flatten (insert-dividers board size))))
+(defn format-board [board]
+    (string/join (flatten (insert-dividers board))))
 
-(defn display-board [board size]
-  (print (format-board board size) "\n\n"))
+(defn display-board [board]
+  (print (format-board board) "\n\n"))
 
 (defn select-position [board]
   (str "Please choose a position between " (first board) " and " (last board)": "))
@@ -88,8 +88,9 @@
 (defn valid-player-selection? [input]
   (boolean (some #{input} ["C" "c" "h" "H"])))
 
-(defn get-rows [board size]
-  (partition size board))
+(defn get-rows [board]
+  (let [size (get-square-root board)]
+    (partition size board)))
 
 (defn get-left-diagonal [size]
   (reduce (fn [a b] (conj a (+' (last a) (+ 1 size)))) [0 (+ 1 size)] (range (- size 2))))
@@ -97,32 +98,33 @@
 (defn get-right-diagonal [size]
   (next (drop-last (reduce (fn [a b] (conj a (+' (last a) (- size 1)))) [(- size 1) (- size 1)] (range size)))))
 
-(defn get-columns [board size]
-  (apply map vector (get-rows board size)))
+(defn get-columns [board]
+  (apply map vector (get-rows board)))
 
 (defn- symbols-at [board positions]
   (map (fn [position] (nth board position)) positions))
 
-(defn get-diagonals [board size]
-  [(symbols-at board (get-left-diagonal size))
-   (symbols-at board (get-right-diagonal size))])
+(defn get-diagonals [board]
+  (let [size (get-square-root board)]
+    [(symbols-at board (get-left-diagonal size))
+    (symbols-at board (get-right-diagonal size))]))
 
-(defn join-sections [board size]
-  (concat (get-rows board size) (concat (get-columns board size)) (concat (get-diagonals board size))))
+(defn join-sections [board]
+  (concat (get-rows board) (concat (get-columns board)) (concat (get-diagonals board))))
 
 (defn symbols-equal? [section symbol]
   (every? #{symbol} section))
 
-(defn n-aligned? [board symbol size]
-  (some true? (for [section (join-sections board size)] (symbols-equal? section symbol))))
+(defn n-aligned? [board symbol]
+  (some true? (for [section (join-sections board)] (symbols-equal? section symbol))))
 
 (defn board-full? [board]
   (if (some #{"_"} board) false true))
 
 (def end-game "Game is over")
 
-(defn game-over? [board symbol1 symbol2 size]
-  (or (n-aligned? board symbol1 size) (n-aligned? board symbol2 size) (board-full? board)))
+(defn game-over? [board symbol1 symbol2]
+  (or (n-aligned? board symbol1) (n-aligned? board symbol2) (board-full? board)))
 
 (defn get-empty-spots [board]
   (remove #{"_"} (flatten (find-empty-spots board))))
@@ -131,39 +133,40 @@
 
 (def max-depth 4)
 
-(defn evaluate-board [board current-player opponent depth size]
+(defn evaluate-board [board current-player opponent depth]
   (cond
     (= depth max-depth) 0
-    (n-aligned? board current-player size) 10
-    (n-aligned? board opponent size) -10
+    (n-aligned? board current-player) 10
+    (n-aligned? board opponent) -10
     :else 0))
 
-(defn minimax [board maximising-player minimising-player depth size]
-    (if (or (= depth max-depth) (game-over? board maximising-player minimising-player size))
-      (evaluate-board board maximising-player minimising-player depth size)
-          (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player (inc depth) size))))))
+(defn minimax [board maximising-player minimising-player depth]
+  (if (or (= depth max-depth) (game-over? board maximising-player minimising-player))
+    (evaluate-board board maximising-player minimising-player depth)
+        (* -1 (val (apply max-key val (scored-moves board minimising-player maximising-player (inc depth)))))))
 
-(defn score-move [board position current-player opponent depth size]
-  {position (minimax (set-position board position current-player) current-player opponent depth size)})
+(defn score-move [board position current-player opponent depth]
+  {position (minimax (set-position board position current-player) current-player opponent depth)})
 
-(defn scored-moves [board current-player opponent depth size]
-  (let [empty-spots (get-empty-spots board)]
-    (into (sorted-map) (map #(score-move board % current-player opponent depth size) empty-spots))))
+(defn scored-moves [board current-player opponent depth]
+  (let [empty-spots (get-empty-spots board)
+        size (get-square-root board)]
+    (into (sorted-map) (map #(score-move board % current-player opponent depth) empty-spots))))
 
-(defn choose-best-move [board current-player opponent depth size]
-  (key (apply max-key val (scored-moves board current-player opponent depth size))))
+(defn choose-best-move [board current-player opponent depth]
+  (key (apply max-key val (scored-moves board current-player opponent depth))))
 
-(defn get-computer-position [board numbered-board current-player opponent depth size]
-  (choose-best-move board current-player opponent depth size))
+(defn get-computer-position [board numbered-board current-player opponent depth]
+  (choose-best-move board current-player opponent depth))
 
 (defprotocol Player
   (get-symbol [this])
-  (get-move [this board numbered-board opponent size]))
+  (get-move [this board numbered-board opponent]))
 
 (deftype HumanPlayer [symbol]
   Player
   (get-symbol [this] symbol)
-  (get-move [this board numbered-board opponent size]
+  (get-move [this board numbered-board opponent]
     (get-human-position board numbered-board (select-position numbered-board))))
 
 (defn make-human-player [symbol] (HumanPlayer. symbol))
@@ -171,22 +174,21 @@
 (deftype ComputerPlayer [symbol]
   Player
   (get-symbol [this] symbol)
-  (get-move [this board numbered-board opponent size]
-    (get-computer-position board numbered-board symbol (get-symbol opponent) start-depth size)))
+  (get-move [this board numbered-board opponent]
+    (get-computer-position board numbered-board symbol (get-symbol opponent) start-depth)))
 
 (defn make-computer-player [symbol] (ComputerPlayer. symbol))
 
-(defn next-player-turn [board current-player opponent size]
-  (display-board board size)
-  (if (game-over? board (get-symbol opponent) (get-symbol current-player) size)
+(defn next-player-turn [board current-player opponent]
+  (display-board board)
+  (if (game-over? board (get-symbol opponent) (get-symbol current-player))
     (println end-game)
     (recur
       (set-position board
-                    (get-move current-player board (numbered-board size) opponent size)
+                    (get-move current-player board (numbered-board (get-square-root board)) opponent)
                     (get-symbol current-player))
       opponent
-      current-player
-      size)))
+      current-player)))
 
 (defn get-player [marker prompt]
   (let [player-type (prompt-user prompt)]
@@ -200,5 +202,5 @@
   (let [board-size (pick-board-size select-board-size)]
     (let [player-1 (get-player "X" select-first-player)
           player-2 (get-player "O" select-opponent)]
-      (display-board (numbered-board board-size) board-size)
-      (next-player-turn (create-board board-size) player-1 player-2 board-size))))
+      (display-board (numbered-board board-size))
+      (next-player-turn (create-board board-size) player-1 player-2))))

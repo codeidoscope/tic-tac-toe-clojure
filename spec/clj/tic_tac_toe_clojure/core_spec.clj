@@ -6,11 +6,11 @@
   (mapcat identity
     (for [spot (get-empty-spots board)]
       (let [board-with-human-move (set-position board spot human-player)]
-        (if (game-over? board-with-human-move human-player computer-player 3)
+        (if (game-over? board-with-human-move human-player computer-player)
           [board-with-human-move]
-          (let [computer-move (choose-best-move board-with-human-move computer-player human-player 0 3)
+          (let [computer-move (choose-best-move board-with-human-move computer-player human-player 0)
                 board-with-computer-move (set-position board-with-human-move computer-move computer-player)]
-            (if (game-over? board-with-computer-move computer-player human-player 3)
+            (if (game-over? board-with-computer-move computer-player human-player)
               [board-with-human-move board-with-computer-move]
               (concat [board-with-human-move board-with-computer-move]
                 (all-computer-boards board-with-computer-move human-player computer-player)))))))))
@@ -74,13 +74,12 @@
               "_" "_" "_"]
       (set-position (create-board 3) 0 "O")))
 
-
   (it "adds pipe signs between numbers for a 4x4 board"
     (should= [["0" " | " "1" " | " "2" " | " "3"]
               ["4" " | " "5" " | " "6" " | " "7"]
               ["8" " | " "9" " | " "10" " | " "11"]
               ["12" " | " "13" " | " "14" " | " "15"]]
-    (insert-pipe-sign (numbered-board 4) 4)))
+    (insert-pipe-sign (numbered-board 4))))
 
   (it "inserts dividers between rows for a 4x4 board"
     (should= [["0" " | " "1" " | " "2" " | " "3"]
@@ -90,26 +89,26 @@
               ["8" " | " "9" " | " "10" " | " "11"]
               "\n-------------\n"
               ["12" " | " "13" " | " "14" " | " "15"]]
-    (insert-dividers (numbered-board 4) 4)))
+    (insert-dividers (numbered-board 4))))
 
   (it "generates a divider of the same length as a piped row"
     (should= "\n-------------\n"
-      (generate-divider (numbered-board 4) 4)))
+      (generate-divider (numbered-board 4))))
 
   (it "is displayed on three lines with separators when empty"
     (should=
       "_ | _ | _\n---------\n_ | _ | _\n---------\n_ | _ | _"
-      (format-board (create-board 3) 3)))
+      (format-board (create-board 3))))
 
   (it "is displayed on three lines with separators when numbered"
     (should=
       "0 | 1 | 2\n---------\n3 | 4 | 5\n---------\n6 | 7 | 8"
-      (format-board (numbered-board 3) 3)))
+      (format-board (numbered-board 3))))
 
   (it "is displayed on four lines and four columns with separators when numbered"
     (should=
       "0 | 1 | 2 | 3\n-------------\n4 | 5 | 6 | 7\n-------------\n8 | 9 | 10 | 11\n-------------\n12 | 13 | 14 | 15"
-      (format-board (numbered-board 4) 4)))
+      (format-board (numbered-board 4))))
 
   (it "prompts the user to choose a position within the range of a 5x5 board"
     (should= "Please choose a position between 0 and 24: "
@@ -138,11 +137,11 @@
                                             "_" "X" "_"
                                             "_" "_" "_"]
 
-                                            ["0" "1" "2"
-                                             "3" "4" "5"
-                                             "6" "7" "8"]
+                                           ["0" "1" "2"
+                                            "3" "4" "5"
+                                            "6" "7" "8"]
 
-                                            "Fake prompt "))))
+                                           "Fake prompt "))))
 
   (it "returns true when a position is empty"
     (should= true
@@ -162,11 +161,11 @@
                                             "_" "X" "_"
                                             "_" "_" "_"]
 
-                                            ["0" "1" "2"
-                                             "3" "4" "5"
-                                             "6" "7" "8"]
+                                           ["0" "1" "2"
+                                            "3" "4" "5"
+                                            "6" "7" "8"]
 
-                                             "Fake prompt "))))
+                                            "Fake prompt "))))
 
   (it "returns true if the input for position selection is valid"
     (should= true
@@ -195,37 +194,37 @@
   (it "returns true if the input for position selection is valid on 4x4 board on 4x4 board"
     (should= true
       (valid-position-selection? "1" ["0" "1" "2" "3"
-                                          "4" "5" "6" "7"
-                                          "8" "9" "10" "11"
-                                          "12" "13" "14" "15"])))
+                                      "4" "5" "6" "7"
+                                      "8" "9" "10" "11"
+                                      "12" "13" "14" "15"])))
 
   (it "returns false if the input for position selection is invalid because beyond range on 4x4 board"
     (should= false
       (valid-position-selection? "16" ["0" "1" "2" "3"
-                                           "4" "5" "6" "7"
-                                           "8" "9" "10" "11"
-                                           "12" "13" "14" "15"])))
+                                       "4" "5" "6" "7"
+                                       "8" "9" "10" "11"
+                                       "12" "13" "14" "15"])))
 
   (it "returns false if the input for positive position selection is invalid because beyond range on 4x4 board"
     (should= false
       (valid-position-selection? "-1" ["0" "1" "2" "3"
-                                           "4" "5" "6" "7"
-                                           "8" "9" "10" "11"
-                                           "12" "13" "14" "15"])))
+                                       "4" "5" "6" "7"
+                                       "8" "9" "10" "11"
+                                       "12" "13" "14" "15"])))
 
   (it "returns false if the input for position selection is invalid because too long on 4x4 board"
     (should= false
       (valid-position-selection? "1234" ["0" "1" "2" "3"
-                                             "4" "5" "6" "7"
-                                             "8" "9" "10" "11"
-                                             "12" "13" "14" "15"])))
+                                         "4" "5" "6" "7"
+                                         "8" "9" "10" "11"
+                                         "12" "13" "14" "15"])))
 
   (it "returns false if the input for position selection is invalid because not numerical on 4x4 board"
     (should= false
       (valid-position-selection? "g" ["0" "1" "2" "3"
-                                          "4" "5" "6" "7"
-                                          "8" "9" "10" "11"
-                                          "12" "13" "14" "15"])))
+                                      "4" "5" "6" "7"
+                                      "8" "9" "10" "11"
+                                      "12" "13" "14" "15"])))
 
   (it "returns true if the input for player selection is valid with an uppercase letter"
     (should= true
@@ -256,27 +255,27 @@
     (should= [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
       (get-rows ["X" "_" "_"
                  "O" "_" "_"
-                 "X" "_" "_"] 3)))
+                 "X" "_" "_"])))
 
  (it "gets the rows from a 4x4 board"
    (should= [["X" "_" "_" "_"] ["O" "_" "_" "_"] ["X" "_" "_" "_"] ["O" "_" "_" "_"]]
      (get-rows ["X" "_" "_" "_"
                 "O" "_" "_" "_"
                 "X" "_" "_" "_"
-                "O" "_" "_" "_"] 4)))
+                "O" "_" "_" "_"])))
 
   (it "gets the columns from a board"
     (should= [["X" "_" "_"] ["O" "_" "_"] ["X" "_" "_"]]
       (get-columns ["X" "O" "X"
                     "_" "_" "_"
-                    "_" "_" "_"] 3)))
+                    "_" "_" "_"])))
 
   (it "gets the columns from a 4x4 board"
     (should= [["X" "_" "_" "_"] ["O" "_" "_" "_"] ["X" "_" "_" "_"] ["O" "_" "_" "_"]]
       (get-columns ["X" "O" "X" "O"
                     "_" "_" "_" "_"
                     "_" "_" "_" "_"
-                    "_" "_" "_" "_"] 4)))
+                    "_" "_" "_" "_"])))
 
   (it "should return a vector with the indices of the cells in a left to right diagonal for a 4x4 board"
     (should= [0 5 10 15]
@@ -298,14 +297,14 @@
       (should= [["X" "O" "X"] ["O" "O" "O"]]
         (get-diagonals ["X" "_" "O"
                         "_" "O" "_"
-                        "O" "_" "X"] 3)))
+                        "O" "_" "X"])))
 
   (it "gets the diagonals from a 4x4 board"
       (should= [["X" "X" "X" "X"] ["O" "O" "O" "O"]]
         (get-diagonals ["X" "_" "_" "O"
                         "_" "X" "O" "_"
                         "_" "O" "X" "_"
-                        "O" "_" "_" "X"] 4)))
+                        "O" "_" "_" "X"])))
 
   (it "joins the rows, columns and diagonals"
     (should=
@@ -314,7 +313,7 @@
        ["X" "X" "X"] ["O" "X" "O"]]
       (join-sections ["X" "_" "O"
                       "_" "X" "_"
-                      "O" "_" "X"] 3)))
+                      "O" "_" "X"])))
 
   (it "joins the rows, columns and diagonals for a 4x4 board"
     (should=
@@ -324,7 +323,7 @@
       (join-sections ["X" "_" "_" "O"
                       "_" "X" "O" "_"
                       "_" "O" "X" "_"
-                      "O" "_" "_" "X"] 4)))
+                      "O" "_" "_" "X"])))
 
   (it "returns true if the symbols are equal for a 3x3 board"
     (should= true
@@ -353,15 +352,15 @@
   (it "checks if three symbols are aligned"
     (should= true
       (n-aligned? ["X" "_" "O"
-                       "_" "X" "_"
-                       "O" "_" "X"] "X" 3)))
+                   "_" "X" "_"
+                   "O" "_" "X"] "X")))
 
   (it "checks if three symbols are aligned"
     (should= true
       (n-aligned? ["X" "_" "_" "_"
-                       "_" "X" "_" "_"
-                       "_" "_" "X" "_"
-                       "_" "_" "_" "X"] "X" 4)))
+                   "_" "X" "_" "_"
+                   "_" "_" "X" "_"
+                   "_" "_" "_" "X"] "X")))
 
   (it "returns true if a 3x3 board is full"
     (should= true
@@ -393,40 +392,40 @@
     (should= true
       (game-over? ["X" "_" "O"
                    "_" "X" "_"
-                   "O" "_" "X"] "X" "O" 3)))
+                   "O" "_" "X"] "X" "O")))
 
   (it "returns true if the game is over because the board is full"
     (should= true
       (game-over? ["X" "O" "X"
                    "O" "X" "O"
-                   "X" "O" "X"] "X" "O" 3)))
+                   "X" "O" "X"] "X" "O")))
 
   (it "returns false if the game is not over and no three symbols are aligned"
    (should= false
      (game-over? ["X" "_" "O"
                   "_" "_" "_"
-                  "O" "_" "X"] "X" "O" 3)))
+                  "O" "_" "X"] "X" "O")))
 
  (it "returns true if the game is over because four symbols are aligned"
    (should= true
      (game-over? ["X" "O" "X" "X"
                   "O" "X" "_" "O"
                   "X" "O" "X" "X"
-                  "X" "O" "X" "X"] "X" "O" 4)))
+                  "X" "O" "X" "X"] "X" "O")))
 
  (it "returns true if the game is over because the 4x4 board is full"
    (should= true
      (game-over? ["X" "O" "X" "X"
                   "O" "X" "X" "O"
                   "X" "O" "O" "X"
-                  "X" "O" "X" "X"] "X" "O" 4)))
+                  "X" "O" "X" "X"] "X" "O")))
 
   (it "returns false if the game is not over and no four symbols are aligned"
    (should= false
      (game-over? ["X" "O" "X" "X"
                   "O" "_" "_" "_"
                   "X" "O" "_" "X"
-                  "O" "_" "X" "_"] "X" "O" 4))))
+                  "O" "_" "X" "_"] "X" "O"))))
 
 (describe "A game"
   (it "tests a Human VS Human game"
@@ -441,18 +440,18 @@
           (str select-board-size
                select-first-player
                select-opponent
-               (format-board (numbered-board 3) 3)" \n\n"
-               (format-board board-state-1 3)" \n\n"
+               (format-board (numbered-board 3))" \n\n"
+               (format-board board-state-1)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-2 3)" \n\n"
+               (format-board board-state-2)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-3 3)" \n\n"
+               (format-board board-state-3)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-4 3)" \n\n"
+               (format-board board-state-4)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-5 3)" \n\n"
+               (format-board board-state-5)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-6 3)" \n\n"
+               (format-board board-state-6)" \n\n"
                end-game"\n")
           output)))
 
@@ -472,20 +471,20 @@
                select-opponent
                invalid-player-selection
                invalid-player-selection
-               (format-board (numbered-board 3) 3)" \n\n"
-               (format-board board-state-1 3)" \n\n"
+               (format-board (numbered-board 3))" \n\n"
+               (format-board board-state-1)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-2 3)" \n\n"
+               (format-board board-state-2)" \n\n"
                (select-position (numbered-board 3))
                occupied-position
                (invalid-position-selection board-state-2)
-               (format-board board-state-3 3)" \n\n"
+               (format-board board-state-3)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-4 3)" \n\n"
+               (format-board board-state-4)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-5 3)" \n\n"
+               (format-board board-state-5)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-6 3)" \n\n"
+               (format-board board-state-6)" \n\n"
                end-game"\n")
           output)))
 
@@ -493,68 +492,68 @@
       (let [output (with-out-str (with-in-str "3\nh\nc\n4\n2\n7\n5\n0" (start-game)))
             board-state-1 (create-board 3)
             board-state-2 (set-position board-state-1 4 "X")
-            board-state-3 (set-position board-state-2 (get-computer-position board-state-2 (numbered-board 3) "O" "X" 0 3) "O")
+            board-state-3 (set-position board-state-2 (get-computer-position board-state-2 (numbered-board 3) "O" "X" 0) "O")
             board-state-4 (set-position board-state-3 2 "X")
-            board-state-5 (set-position board-state-4 (get-computer-position board-state-4 (numbered-board 3) "O" "X" 0 3) "O")
+            board-state-5 (set-position board-state-4 (get-computer-position board-state-4 (numbered-board 3) "O" "X" 0) "O")
             board-state-6 (set-position board-state-5 7 "X")
-            board-state-7 (set-position board-state-6 (get-computer-position board-state-6 (numbered-board 3) "O" "X" 0 3) "O")
+            board-state-7 (set-position board-state-6 (get-computer-position board-state-6 (numbered-board 3) "O" "X" 0) "O")
             board-state-8 (set-position board-state-7 5 "X")
-            board-state-9 (set-position board-state-8 (get-computer-position board-state-8 (numbered-board 3) "O" "X" 0 3) "O")
+            board-state-9 (set-position board-state-8 (get-computer-position board-state-8 (numbered-board 3) "O" "X" 0) "O")
             board-state-10 (set-position board-state-9 0 "X")]
         (should=
           (str select-board-size
                select-first-player
                select-opponent
-               (format-board (numbered-board 3) 3)" \n\n"
-               (format-board board-state-1 3)" \n\n"
+               (format-board (numbered-board 3))" \n\n"
+               (format-board board-state-1)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-2 3)" \n\n"
-               (format-board board-state-3 3)" \n\n"
+               (format-board board-state-2)" \n\n"
+               (format-board board-state-3)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-4 3)" \n\n"
-               (format-board board-state-5 3)" \n\n"
+               (format-board board-state-4)" \n\n"
+               (format-board board-state-5)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-6 3)" \n\n"
-               (format-board board-state-7 3)" \n\n"
+               (format-board board-state-6)" \n\n"
+               (format-board board-state-7)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-8 3)" \n\n"
-               (format-board board-state-9 3)" \n\n"
+               (format-board board-state-8)" \n\n"
+               (format-board board-state-9)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-10 3)" \n\n"
+               (format-board board-state-10)" \n\n"
                end-game"\n")
           output)))
 
   (it "tests a Computer VS Human game"
       (let [output (with-out-str (with-in-str "3\nc\nh\n4\n6\n5\n1" (start-game)))
             board-state-1 (create-board 3)
-            board-state-2 (set-position board-state-1 (get-computer-position board-state-1 (numbered-board 3) "X" "O" 0 3) "X")
+            board-state-2 (set-position board-state-1 (get-computer-position board-state-1 (numbered-board 3) "X" "O" 0) "X")
             board-state-3 (set-position board-state-2 4 "O")
-            board-state-4 (set-position board-state-3 (get-computer-position board-state-3 (numbered-board 3) "X" "O" 0 3) "X")
+            board-state-4 (set-position board-state-3 (get-computer-position board-state-3 (numbered-board 3) "X" "O" 0) "X")
             board-state-5 (set-position board-state-4 6 "O")
-            board-state-6 (set-position board-state-5 (get-computer-position board-state-5 (numbered-board 3) "X" "O" 0 3) "X")
+            board-state-6 (set-position board-state-5 (get-computer-position board-state-5 (numbered-board 3) "X" "O" 0) "X")
             board-state-7 (set-position board-state-6 5 "O")
-            board-state-8 (set-position board-state-7 (get-computer-position board-state-7 (numbered-board 3) "X" "O" 0 3) "X")
+            board-state-8 (set-position board-state-7 (get-computer-position board-state-7 (numbered-board 3) "X" "O" 0) "X")
             board-state-9 (set-position board-state-8 1 "O")
-            board-state-10 (set-position board-state-9 (get-computer-position board-state-9 (numbered-board 3) "X" "O" 0 3) "X")]
+            board-state-10 (set-position board-state-9 (get-computer-position board-state-9 (numbered-board 3) "X" "O" 0) "X")]
         (should=
           (str select-board-size
                select-first-player
                select-opponent
-               (format-board (numbered-board 3) 3)" \n\n"
-               (format-board board-state-1 3)" \n\n"
-               (format-board board-state-2 3)" \n\n"
+               (format-board (numbered-board 3))" \n\n"
+               (format-board board-state-1)" \n\n"
+               (format-board board-state-2)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-3 3)" \n\n"
-               (format-board board-state-4 3)" \n\n"
+               (format-board board-state-3)" \n\n"
+               (format-board board-state-4)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-5 3)" \n\n"
-               (format-board board-state-6 3)" \n\n"
+               (format-board board-state-5)" \n\n"
+               (format-board board-state-6)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-7 3)" \n\n"
-               (format-board board-state-8 3)" \n\n"
+               (format-board board-state-7)" \n\n"
+               (format-board board-state-8)" \n\n"
                (select-position (numbered-board 3))
-               (format-board board-state-9 3)" \n\n"
-               (format-board board-state-10 3)" \n\n"
+               (format-board board-state-9)" \n\n"
+               (format-board board-state-10)" \n\n"
                end-game"\n")
           output))))
 
@@ -569,7 +568,7 @@
                               "3" "4" "5"
                               "6" "7" "8"]
 
-                             "X" "O" 0 3)))
+                             "X" "O" 0)))
 
   (it "returns a winning position for player X when there are three spots left"
     (should= 6
@@ -577,11 +576,11 @@
                               "O" "O" "_"
                               "_" "X" "X"]
 
-                              ["0" "1" "2"
-                               "3" "4" "5"
-                               "6" "7" "8"]
+                             ["0" "1" "2"
+                              "3" "4" "5"
+                              "6" "7" "8"]
 
-                               "X" "O" 0 3)))
+                             "X" "O" 0)))
 
   (it "returns a position and positive score when a winning position is available"
     (should= 8
@@ -594,7 +593,7 @@
                               "3" "4" "5"
                               "6" "7" "8"]
 
-                             "X" "O" 0 3)))
+                             "X" "O" 0)))
 
   (it "returns a position and negative score when the opponent is in a winning position"
     (should= 8
@@ -607,7 +606,7 @@
                               "3" "4" "5"
                               "6" "7" "8"]
 
-                             "X" "O" 0 3)))
+                             "X" "O" 0)))
 
   (it "returns a position and 0 when the game is a draw"
     (should= 8
@@ -620,102 +619,102 @@
                               "3" "4" "5"
                               "6" "7" "8"]
 
-                             "X" "O" 0 3)))
+                             "X" "O" 0)))
 
   (it "returns a score of 10 if the game is a win"
     (should= 10
       (evaluate-board ["X" "_" "_"
                        "X" "O" "O"
-                       "X" "_" "_"] "X" "O" 3 3)))
+                       "X" "_" "_"] "X" "O" 3)))
 
   (it "returns a score of -10 if the game is a loss"
     (should= -10
       (evaluate-board ["X" "_" "_"
                        "O" "O" "O"
-                       "X" "_" "_"] "X" "O" 3 3)))
+                       "X" "_" "_"] "X" "O" 3)))
 
   (it "returns a score of zero if the game is a draw"
     (should= 0
       (evaluate-board ["X" "X" "O"
                        "O" "O" "X"
-                       "X" "O" "_"] "X" "O" 3 3)))
+                       "X" "O" "_"] "X" "O" 3)))
 
   (it "returns a score of 10 if the game is a win"
    (should= 10
      (evaluate-board ["X" "X" "X" "X"
                       "O" "X" "_" "O"
                       "X" "O" "X" "X"
-                      "X" "O" "X" "X"] "X" "O" 0 4)))
+                      "X" "O" "X" "X"] "X" "O" 0)))
 
   (it "returns a score of -10 if the game is a loss"
    (should= -10
      (evaluate-board ["X" "O" "X" "X"
                       "O" "O" "_" "O"
                       "X" "O" "X" "X"
-                      "X" "O" "X" "X"] "X" "O" 0 4)))
+                      "X" "O" "X" "X"] "X" "O" 0)))
 
   (it "returns a score of zero if the game is a draw"
    (should= 0
      (evaluate-board ["X" "O" "X" "X"
                       "O" "X" "_" "O"
                       "X" "O" "O" "X"
-                      "X" "O" "X" "X"] "X" "O" 0 4)))
+                      "X" "O" "X" "X"] "X" "O" 0)))
 ;
   (it "returns a hash that includes the position and the score of the move when there is a winning move"
     (should= {5 10}
       (score-move ["O" "X" "X"
                    "O" "_" "_"
-                   "_" "O" "X"] 5 "X" "O" 0 3)))
+                   "_" "O" "X"] 5 "X" "O" 0)))
 
   (it "returns a hash that includes the position and the score of the move when there is a neutral move"
     (should= {4 0}
       (score-move ["X" "O" "X"
                    "O" "_" "_"
-                   "_" "X" "O"] 4 "X" "O" 0 3)))
+                   "_" "X" "O"] 4 "X" "O" 0)))
 
   (it "returns a hash that includes the position and the score of the move when there is a losing move"
     (should= {4 -10}
       (score-move ["O" "X" "X"
                    "O" "_" "_"
-                   "O" "O" "X"] 4 "X" "O" 0 3)))
+                   "O" "O" "X"] 4 "X" "O" 0)))
 
   (it "returns a list of scored positions in hashes"
     (should= {3 0, 4 -10, 5 10}
       (scored-moves ["O" "X" "X"
                      "_" "_" "_"
-                     "O" "O" "X"] "X" "O" 0 3)))
+                     "O" "O" "X"] "X" "O" 0)))
 
   (it "returns an empty list if the board is full"
     (should= {}
       (scored-moves ["O" "X" "X"
                      "X" "O" "O"
-                     "O" "O" "X"] "X" "O" 0 3)))
+                     "O" "O" "X"] "X" "O" 0)))
 ;
   (it "returns a winning position for the maximising player"
     (should= 5
       (choose-best-move ["O" "X" "X"
                          "_" "_" "_"
-                         "O" "O" "X"] "X" "O" 0 3)))
+                         "O" "O" "X"] "X" "O" 0)))
 
   (it "returns a position that will make the maximising player lose"
     (should= 3
       (choose-best-move ["O" "X" "X"
                          "_" "_" "_"
-                         "O" "O" "X"] "O" "X" 0 3)))
+                         "O" "O" "X"] "O" "X" 0)))
 
   (it "returns a position that will make the maximising player lose"
     (should= 5
       (choose-best-move ["O" "X" "X"
                          "X" "_" "_"
-                         "_" "O" "X"] "O" "X" 0 3)))
+                         "_" "O" "X"] "O" "X" 0)))
 
   (it "does not loose"
      (doseq [board (all-computer-boards (create-board 3) "X" "0")]
-       (should (>= 0 (evaluate-board board "O" "X" 0 3)))))
+       (should (>= 0 (evaluate-board board "O" "X" 0)))))
 
   (it "returns a score of 0 when it reaches the max depth"
     (should= 0
       (minimax ["_" "X" "_" "O"
                 "_" "X" "_" "_"
                 "_" "_" "O" "_"
-                "X" "_" "X" "_"] "X" "O" 0 4))))
+                "X" "_" "X" "_"] "X" "O" 0))))
