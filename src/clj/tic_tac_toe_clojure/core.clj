@@ -179,10 +179,25 @@
 
 (defn make-computer-player [symbol] (ComputerPlayer. symbol))
 
+(def play-again-prompt "Play another game? Enter yes (Y/y) or no (N/n): \n")
+
+(def invalid-play-again-input "Invalid input. Please enter yes (Y/y) or no (N/n): ")
+
+(defn valid-play-again-input? [input]
+  (boolean (some #{input} ["Y" "y" "N" "n"])))
+
+(defn play-again? [prompt]
+  (let [user-input (prompt-user prompt)]
+    (cond
+      (and (valid-play-again-input? user-input) (boolean (some #{user-input} ["Y" "y"]))) (start-game)
+      (and (valid-play-again-input? user-input) (boolean (some #{user-input} ["N" "n"]))) (println "Bye for now!")
+      :else (play-again? invalid-play-again-input))))
+
 (defn next-player-turn [board current-player opponent]
   (display-board board)
   (if (game-over? board (get-symbol opponent) (get-symbol current-player))
-    (println end-game)
+    (do (println end-game)
+    (play-again? play-again-prompt))
     (recur
       (set-position board
                     (get-move current-player board (numbered-board (get-square-root board)) opponent)
