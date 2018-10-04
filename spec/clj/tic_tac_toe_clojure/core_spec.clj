@@ -458,31 +458,31 @@
     (should= 8
       (get-computer-position ["O" "_" "X"
                               "O" "_" "X"
-                              "X" "_" "_"] "X" "O")))
+                              "X" "_" "_"] "X" "O" 0)))
 
   (it "returns a winning position for player X when there are three spots left"
     (should= 6
       (get-computer-position ["O" "X" "_"
                               "O" "O" "_"
-                              "_" "X" "X"] "X" "O")))
+                              "_" "X" "X"] "X" "O" 0)))
 
   (it "returns a position and positive score when a winning position is available"
     (should= 8
       (get-computer-position ["O" "X" "X"
                               "O" "O" "X"
-                              "X" "O" "_"] "X" "O")))
+                              "X" "O" "_"] "X" "O" 0)))
 
   (it "returns a position and negative score when the opponent is in a winning position"
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "O" "O" "_"] "X" "O")))
+                              "O" "O" "_"] "X" "O" 0)))
 
   (it "returns a position and 0 when the game is a draw"
     (should= 8
       (get-computer-position ["O" "X" "O"
                               "O" "X" "X"
-                              "X" "O" "_"] "X" "O")))
+                              "X" "O" "_"] "X" "O" 0)))
 
   (it "returns a score of 10 if the game is a win"
     (should= 10
@@ -507,70 +507,78 @@
      (evaluate-4x4-board ["X" "X" "X" "X"
                           "O" "X" "_" "O"
                           "X" "O" "X" "X"
-                          "X" "O" "X" "X"] "X" "O")))
+                          "X" "O" "X" "X"] "X" "O" 0)))
 
   (it "returns a score of -10 if the game is a loss"
    (should= -10
      (evaluate-4x4-board ["X" "O" "X" "X"
                           "O" "O" "_" "O"
                           "X" "O" "X" "X"
-                          "X" "O" "X" "X"] "X" "O")))
+                          "X" "O" "X" "X"] "X" "O" 0)))
 
   (it "returns a score of zero if the game is a draw"
    (should= 0
      (evaluate-4x4-board ["X" "O" "X" "X"
                           "O" "X" "_" "O"
                           "X" "O" "O" "X"
-                          "X" "O" "X" "X"] "X" "O")))
+                          "X" "O" "X" "X"] "X" "O" 0)))
 
   (it "returns a hash that includes the position and the score of the move when there is a winning move"
     (should= {5 10}
       (score-move ["O" "X" "X"
                    "O" "_" "_"
-                   "_" "O" "X"] 5 "X" "O")))
+                   "_" "O" "X"] 5 "X" "O" 0)))
 
   (it "returns a hash that includes the position and the score of the move when there is a neutral move"
     (should= {4 0}
       (score-move ["X" "O" "X"
                    "O" "_" "_"
-                   "_" "X" "O"] 4 "X" "O")))
+                   "_" "X" "O"] 4 "X" "O" 0)))
 
   (it "returns a hash that includes the position and the score of the move when there is a losing move"
     (should= {4 -10}
       (score-move ["O" "X" "X"
                    "O" "_" "_"
-                   "O" "O" "X"] 4 "X" "O")))
+                   "O" "O" "X"] 4 "X" "O" 0)))
 
   (it "returns a list of scored positions in hashes"
     (should= {3 0, 4 -10, 5 10}
       (scored-moves ["O" "X" "X"
                      "_" "_" "_"
-                     "O" "O" "X"] "X" "O")))
+                     "O" "O" "X"] "X" "O" 0)))
 
   (it "returns an empty list if the board is full"
     (should= {}
       (scored-moves ["O" "X" "X"
                      "X" "O" "O"
-                     "O" "O" "X"] "X" "O")))
+                     "O" "O" "X"] "X" "O" 0)))
 
   (it "returns a winning position for the maximising player"
     (should= 5
       (choose-best-move ["O" "X" "X"
                          "_" "_" "_"
-                         "O" "O" "X"] "X" "O")))
+                         "O" "O" "X"] "X" "O" 0)))
 
   (it "returns a position that will make the maximising player lose"
     (should= 3
       (choose-best-move ["O" "X" "X"
                          "_" "_" "_"
-                         "O" "O" "X"] "O" "X")))
+                         "O" "O" "X"] "O" "X" 0)))
 
   (it "returns a position that will make the maximising player lose"
     (should= 5
       (choose-best-move ["O" "X" "X"
                          "X" "_" "_"
-                         "_" "O" "X"] "O" "X")))
+                         "_" "O" "X"] "O" "X" 0)))
 
   (it "does not loose"
      (doseq [board (all-computer-boards (create-board) "X" "0")]
-       (should (>= 0 (evaluate-board board "O" "X"))))))
+       (should (>= 0 (evaluate-board board "O" "X")))))
+
+  (it "returns a score of 0 when it reaches the max depth"
+    (should= 0
+      (minimax ["_" "X" "_" "O"
+                "_" "X" "_" "_"
+                "_" "_" "O" "_"
+                "X" "_" "X" "_"] "X" "O" 0)))
+       )
