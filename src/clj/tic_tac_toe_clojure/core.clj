@@ -193,7 +193,7 @@
 (defn get-player [marker prompt]
   (let [player-type (prompt-user prompt)]
   (if (valid-player-selection? player-type)
-      (if (= player-type "h")
+      (if (boolean (some #{player-type} ["H" "h"]))
         (HumanPlayer. marker)
         (ComputerPlayer. marker))
         (get-player marker invalid-player-selection))))
