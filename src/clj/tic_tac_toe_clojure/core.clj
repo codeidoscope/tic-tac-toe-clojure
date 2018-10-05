@@ -20,11 +20,11 @@
   (into [] (repeat (get-square size) "_")))
 
 (defn numbered-board [size]
-  (for [cell (take (get-square size) (range))] (str cell)))
+  (map str (range (get-square size))))
 
 (defn insert-pipe-sign [board]
   (let [rows (get-rows board)]
-    (for [row rows] (interpose " | " row))))
+    (map #(interpose " | " %) rows)))
 
 (defn generate-divider [board]
   (let [piped-rows (insert-pipe-sign board)]
