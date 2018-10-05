@@ -137,9 +137,7 @@
                                             "_" "X" "_"
                                             "_" "_" "_"]
 
-                                           ["0" "1" "2"
-                                            "3" "4" "5"
-                                            "6" "7" "8"]
+                                           (numbered-board 3)
 
                                            "Fake prompt "))))
 
@@ -161,70 +159,45 @@
                                             "_" "X" "_"
                                             "_" "_" "_"]
 
-                                           ["0" "1" "2"
-                                            "3" "4" "5"
-                                            "6" "7" "8"]
+                                           (numbered-board 3)
 
                                             "Fake prompt "))))
 
   (it "returns true if the input for position selection is valid"
     (should= true
-      (valid-position-selection? "1" ["0" "1" "2"
-                                      "3" "4" "5"
-                                      "6" "7" "8"])))
+      (valid-position-selection? "1" (numbered-board 3))))
 
   (it "returns false if the input for position selection is invalid because beyond range"
     (should= false
-      (valid-position-selection? "9" ["0" "1" "2"
-                                      "3" "4" "5"
-                                      "6" "7" "8"])))
+      (valid-position-selection? "9" (numbered-board 3))))
 
   (it "returns false if the input for position selection is invalid because too long"
     (should= false
-      (valid-position-selection? "1234" ["0" "1" "2"
-                                         "3" "4" "5"
-                                         "6" "7" "8"])))
+      (valid-position-selection? "1234" (numbered-board 3))))
 
   (it "returns false if the input for position selection is invalid because not numerical"
     (should= false
-      (valid-position-selection? "g" ["0" "1" "2"
-                                      "3" "4" "5"
-                                      "6" "7" "8"])))
+      (valid-position-selection? "g" (numbered-board 3))))
 
   (it "returns true if the input for position selection is valid on 4x4 board on 4x4 board"
     (should= true
-      (valid-position-selection? "1" ["0" "1" "2" "3"
-                                      "4" "5" "6" "7"
-                                      "8" "9" "10" "11"
-                                      "12" "13" "14" "15"])))
+      (valid-position-selection? "1" (numbered-board 4))))
 
   (it "returns false if the input for position selection is invalid because beyond range on 4x4 board"
     (should= false
-      (valid-position-selection? "16" ["0" "1" "2" "3"
-                                       "4" "5" "6" "7"
-                                       "8" "9" "10" "11"
-                                       "12" "13" "14" "15"])))
+      (valid-position-selection? "16" (numbered-board 4))))
 
   (it "returns false if the input for positive position selection is invalid because beyond range on 4x4 board"
     (should= false
-      (valid-position-selection? "-1" ["0" "1" "2" "3"
-                                       "4" "5" "6" "7"
-                                       "8" "9" "10" "11"
-                                       "12" "13" "14" "15"])))
+      (valid-position-selection? "-1" (numbered-board 4))))
 
   (it "returns false if the input for position selection is invalid because too long on 4x4 board"
     (should= false
-      (valid-position-selection? "1234" ["0" "1" "2" "3"
-                                         "4" "5" "6" "7"
-                                         "8" "9" "10" "11"
-                                         "12" "13" "14" "15"])))
+      (valid-position-selection? "1234" (numbered-board 4))))
 
   (it "returns false if the input for position selection is invalid because not numerical on 4x4 board"
     (should= false
-      (valid-position-selection? "g" ["0" "1" "2" "3"
-                                      "4" "5" "6" "7"
-                                      "8" "9" "10" "11"
-                                      "12" "13" "14" "15"])))
+      (valid-position-selection? "g" (numbered-board 4))))
 
   (it "returns true if the input for player selection is valid with an uppercase letter"
     (should= true
@@ -477,7 +450,7 @@
                "Bye for now!\n")
           output)))
 
-  (it "tests a Human VS Human game where the position and player input are incorrect at first"
+  (it "tests a Human VS Human game where the user inputs input are incorrect at first"
       (let [output (with-out-str (with-in-str "g\nhello\n3\nh\nz\n4\nh\n0\n0\nm\n2\n3\n5\n6\np\n2\nhello\nn" (start-game)))
             board-state-1 (create-board 3)
             board-state-2 (set-position board-state-1 0 "X")
@@ -499,7 +472,7 @@
                (format-board board-state-2)" \n\n"
                (select-position (numbered-board 3))
                occupied-position
-               (invalid-position-selection board-state-2)
+               (invalid-position-selection (numbered-board 3))
                (format-board board-state-3)" \n\n"
                (select-position (numbered-board 3))
                (format-board board-state-4)" \n\n"
@@ -647,9 +620,7 @@
                               "O" "_" "X"
                               "X" "_" "_"]
 
-                             ["0" "1" "2"
-                              "3" "4" "5"
-                              "6" "7" "8"]
+                             (numbered-board 3)
 
                              "X" "O" 0)))
 
@@ -659,9 +630,7 @@
                               "O" "O" "_"
                               "_" "X" "X"]
 
-                             ["0" "1" "2"
-                              "3" "4" "5"
-                              "6" "7" "8"]
+                             (numbered-board 3)
 
                              "X" "O" 0)))
 
@@ -671,10 +640,7 @@
                               "O" "O" "X"
                               "X" "O" "_"]
 
-
-                             ["0" "1" "2"
-                              "3" "4" "5"
-                              "6" "7" "8"]
+                             (numbered-board 3)
 
                              "X" "O" 0)))
 
@@ -684,10 +650,7 @@
                               "O" "X" "X"
                               "O" "O" "_"]
 
-
-                             ["0" "1" "2"
-                              "3" "4" "5"
-                              "6" "7" "8"]
+                             (numbered-board 3)
 
                              "X" "O" 0)))
 
@@ -697,10 +660,7 @@
                               "O" "X" "X"
                               "X" "O" "_"]
 
-
-                             ["0" "1" "2"
-                              "3" "4" "5"
-                              "6" "7" "8"]
+                              (numbered-board 3)
 
                              "X" "O" 0)))
 

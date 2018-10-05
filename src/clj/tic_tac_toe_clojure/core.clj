@@ -20,11 +20,11 @@
   (into [] (repeat (get-square size) "_")))
 
 (defn numbered-board [size]
-  (for [cell (take (get-square size) (range))] (str cell)))
+  (map str (range (get-square size))))
 
 (defn insert-pipe-sign [board]
   (let [rows (get-rows board)]
-    (for [row rows] (interpose " | " row))))
+    (map #(interpose " | " %) rows)))
 
 (defn generate-divider [board]
   (let [piped-rows (insert-pipe-sign board)]
@@ -72,7 +72,7 @@
           (if (position-empty? board (Integer/parseInt user-input))
                 (Integer/parseInt user-input)
                 (get-human-position board numbered-board occupied-position))
-          (get-human-position board numbered-board (invalid-position-selection board)))))
+          (get-human-position board numbered-board (invalid-position-selection numbered-board)))))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
@@ -208,7 +208,7 @@
 (defn get-player [marker prompt]
   (let [player-type (prompt-user prompt)]
   (if (valid-player-selection? player-type)
-      (if (= player-type "h")
+      (if (boolean (some #{player-type} ["H" "h"]))
         (HumanPlayer. marker)
         (ComputerPlayer. marker))
         (get-player marker invalid-player-selection))))
