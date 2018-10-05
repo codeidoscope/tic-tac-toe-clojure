@@ -455,7 +455,7 @@
                end-game"\n")
           output)))
 
-  (it "tests a Human VS Human game where the position and player input are incorrect at first"
+  (it "tests a Human VS Human game where the user inputs are incorrect at first"
       (let [output (with-out-str (with-in-str "g\nhello\n3\nh\nz\n4\nh\n0\n0\nm\n2\n3\n5\n6" (start-game)))
             board-state-1 (create-board 3)
             board-state-2 (set-position board-state-1 0 "X")
@@ -477,7 +477,7 @@
                (format-board board-state-2)" \n\n"
                (select-position (numbered-board 3))
                occupied-position
-               (invalid-position-selection board-state-2)
+               (invalid-position-selection (numbered-board 3))
                (format-board board-state-3)" \n\n"
                (select-position (numbered-board 3))
                (format-board board-state-4)" \n\n"

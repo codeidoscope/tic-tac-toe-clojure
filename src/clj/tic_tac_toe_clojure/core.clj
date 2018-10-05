@@ -72,7 +72,7 @@
           (if (position-empty? board (Integer/parseInt user-input))
                 (Integer/parseInt user-input)
                 (get-human-position board numbered-board occupied-position))
-          (get-human-position board numbered-board (invalid-position-selection board)))))
+          (get-human-position board numbered-board (invalid-position-selection numbered-board)))))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
