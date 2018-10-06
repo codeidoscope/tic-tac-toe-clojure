@@ -7,7 +7,7 @@
 (declare get-rows)
 
 (defn -main [& args]
-  (println "Starting game")
+  (println "Starting game / Partie commencée")
   (start-game))
 
 (defn get-square [number]
@@ -40,16 +40,24 @@
   (print (format-board board) "\n\n"))
 
 (defn select-position [board]
-  (str "Please choose a position between " (first board) " and " (last board)": "))
+  {:en (str "Please choose a position between " (first board) " and " (last board)": ")
+   :fr (str "Choisissez une position entre " (first board) " et " (last board)": ")})
 
-(def occupied-position "This position is occupied, please select another: ")
+(def occupied-position
+  {:en "This position is occupied, please select another: "
+   :fr "Cette case est déjà occupée, choisissez en une autre: "})
 
 (defn invalid-position-selection [board]
-  (str "This number is invalid, please enter a number between "(first board)" and "(last board)": "))
+  {:en (str "This number is invalid, please enter a number between "(first board)" and "(last board)": ")
+   :fr (str "Ce nombre n'est pas valide, choisissez un nombre entre "(first board)" et "(last board)": ")})
 
-(def select-board-size "Please enter a number greater than 0 to determine the size of your board: ")
+(def select-board-size
+  {:en "Please enter a number greater than 0 to determine the size of your board: "
+   :fr "Choisissez un nombre plus large que 0 pour déterminer la taille de la grille: "})
 
-(def invalid-board-size "This number is invalid, pleaser enter a number greater than 0: ")
+(def invalid-board-size
+  {:en "This number is invalid, pleaser enter a number greater than 0: "
+   :fr "Ce nombre n'est pas valide, choisissez un nombre plus large que 0: "})
 
 (defn valid-position-selection? [input board]
   (boolean (some #{input} board)))
@@ -60,33 +68,55 @@
 (defn prompt-user [prompt]
   (do (print prompt) (flush) (read-line)))
 
-(defn pick-board-size [prompt]
-  (let [user-input (prompt-user prompt)]
+(def select-language-prompt "Please select a language / Choisissez une langue (EN / FR): ")
+
+(def invalid-language-selection "Not valid, try again / Non valide, réessayez: ")
+
+(defn valid-language-selection? [input]
+ (boolean (some #{input} ["EN" "en" "En" "eN" "FR" "fr" "Fr" "fR"])))
+
+(defn get-translated-prompt [prompt language]
+ (get prompt language))
+
+(defn select-language [prompt]
+  (let [language (prompt-user prompt)]
+    (if (valid-language-selection? language)
+      (keyword (string/lower-case language))
+      (select-language invalid-language-selection))))
+
+(defn pick-board-size [prompt language]
+  (let [user-input (prompt-user (get-translated-prompt prompt language))]
     (if (boolean (re-seq #"^[1-9]+[0-9]*$" user-input))
         (Integer/parseInt user-input)
-        (pick-board-size invalid-board-size))))
+        (pick-board-size invalid-board-size language))))
 
-(defn get-human-position [board numbered-board prompt]
-  (let [user-input (prompt-user prompt)]
+(defn get-human-position [board numbered-board prompt language]
+  (let [user-input (prompt-user (get-translated-prompt prompt language))]
       (if (valid-position-selection? user-input numbered-board)
           (if (position-empty? board (Integer/parseInt user-input))
                 (Integer/parseInt user-input)
-                (get-human-position board numbered-board occupied-position))
-          (get-human-position board numbered-board (invalid-position-selection numbered-board)))))
+                (get-human-position board numbered-board occupied-position language))
+          (get-human-position board numbered-board (invalid-position-selection numbered-board) language))))
 
 (defn find-empty-spots [board]
   (filter (fn [[_ marker]] (= "_" marker)) (map-indexed vector board)))
 
 (def set-position assoc)
 
-(def select-first-player "Please select the first player to take a turn (H/h for human or C/c for computer): ")
+(def select-first-player
+  {:en "Please select the first player to take a turn (H/h for human or C/c for computer): "
+   :fr "Choisissez le premier joueur (H/h pour humain ou O/o pour ordinateur): "})
 
-(def select-opponent "Please select an opponent: ")
+(def select-opponent
+  {:en "Please select an opponent: "
+   :fr "Choisissez un adversaire: "})
 
-(def invalid-player-selection "Invalid choice, please choose H/h for human or C/c for computer: ")
+(def invalid-player-selection
+  {:en "Invalid choice, please choose H/h for human or C/c for computer: "
+   :fr "Ce choix n'est pas valide, choisissez H/h pour humain ou O/o pour ordinateur: "})
 
 (defn valid-player-selection? [input]
-  (boolean (some #{input} ["C" "c" "h" "H"])))
+  (boolean (some #{input} ["C" "c" "O" "o" "h" "H"])))
 
 (defn get-rows [board]
   (let [size (get-square-root board)]
@@ -121,7 +151,9 @@
 (defn board-full? [board]
   (if (some #{"_"} board) false true))
 
-(def end-game "Game is over")
+(def end-game
+  {:en "Game is over"
+   :fr "Jeu terminé"})
 
 (defn game-over? [board symbol1 symbol2]
   (or (n-aligned? board symbol1) (n-aligned? board symbol2) (board-full? board)))
@@ -161,46 +193,48 @@
 
 (defprotocol Player
   (get-symbol [this])
-  (get-move [this board numbered-board opponent]))
+  (get-move [this board numbered-board opponent language]))
 
 (deftype HumanPlayer [symbol]
   Player
   (get-symbol [this] symbol)
-  (get-move [this board numbered-board opponent]
-    (get-human-position board numbered-board (select-position numbered-board))))
+  (get-move [this board numbered-board opponent language]
+    (get-human-position board numbered-board (select-position numbered-board) language)))
 
 (defn make-human-player [symbol] (HumanPlayer. symbol))
 
 (deftype ComputerPlayer [symbol]
   Player
   (get-symbol [this] symbol)
-  (get-move [this board numbered-board opponent]
+  (get-move [this board numbered-board opponent language]
     (get-computer-position board numbered-board symbol (get-symbol opponent) start-depth)))
 
 (defn make-computer-player [symbol] (ComputerPlayer. symbol))
 
-(defn next-player-turn [board current-player opponent]
+(defn next-player-turn [board current-player opponent language]
   (display-board board)
   (if (game-over? board (get-symbol opponent) (get-symbol current-player))
-    (println end-game)
+    (println (get-translated-prompt end-game language))
     (recur
       (set-position board
-                    (get-move current-player board (numbered-board (get-square-root board)) opponent)
+                    (get-move current-player board (numbered-board (get-square-root board)) opponent language)
                     (get-symbol current-player))
       opponent
-      current-player)))
+      current-player
+      language)))
 
-(defn get-player [marker prompt]
-  (let [player-type (prompt-user prompt)]
+(defn get-player [marker prompt language]
+  (let [player-type (prompt-user (get-translated-prompt prompt language))]
   (if (valid-player-selection? player-type)
       (if (boolean (some #{player-type} ["H" "h"]))
         (HumanPlayer. marker)
         (ComputerPlayer. marker))
-        (get-player marker invalid-player-selection))))
+        (get-player marker (get-translated-prompt invalid-player-selection language) language))))
 
 (defn start-game []
-  (let [board-size (pick-board-size select-board-size)]
-    (let [player-1 (get-player "X" select-first-player)
-          player-2 (get-player "O" select-opponent)]
-      (display-board (numbered-board board-size))
-      (next-player-turn (create-board board-size) player-1 player-2))))
+  (let [language (select-language select-language-prompt)]
+    (let [board-size (pick-board-size select-board-size language)]
+      (let [player-1 (get-player "X" select-first-player language)
+            player-2 (get-player "O" select-opponent language)]
+        (display-board (numbered-board board-size))
+        (next-player-turn (create-board board-size) player-1 player-2 language)))))
