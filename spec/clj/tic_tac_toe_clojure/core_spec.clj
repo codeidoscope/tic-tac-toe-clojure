@@ -221,7 +221,27 @@
 
   (it "returns an integer if the input is valid"
     (should= 5
-      (with-in-str "5" (pick-board-size "Fake prompt")))))
+      (with-in-str "5" (pick-board-size "Fake prompt"))))
+
+  (it "returns true if the input for player selection is valid with an uppercase letter"
+    (should= true
+      (valid-play-again-input? "Y")))
+
+  (it "returns true if the input for player selection is valid with a lowercase letter"
+    (should= true
+      (valid-play-again-input? "n")))
+
+  (it "returns false if the input for player selection is invalid because it's not Y or N"
+    (should= false
+      (valid-play-again-input? "Z")))
+
+  (it "returns false if the input for player selection is invalid because it's too long"
+    (should= false
+      (valid-play-again-input? "hello")))
+
+  (it "returns false if the input for player selection is invalid because it's numerical"
+    (should= false
+      (valid-play-again-input? "123"))))
 
 (describe "A decision engine"
   (it "gets the rows from a 3x3 board"
@@ -402,7 +422,7 @@
 
 (describe "A game"
   (it "tests a Human VS Human game"
-      (let [output (with-out-str (with-in-str "3\nh\nh\n0\n2\n3\n5\n6" (start-game)))
+      (let [output (with-out-str (with-in-str "3\nh\nh\n0\n2\n3\n5\n6\nn" (start-game)))
             board-state-1 (create-board 3)
             board-state-2 (set-position board-state-1 0 "X")
             board-state-3 (set-position board-state-2 2 "O")
@@ -425,11 +445,13 @@
                (format-board board-state-5)" \n\n"
                (select-position (numbered-board 3))
                (format-board board-state-6)" \n\n"
-               end-game"\n")
+               end-game"\n"
+               play-again-prompt
+               "Bye for now!\n")
           output)))
 
-  (it "tests a Human VS Human game where the user inputs are incorrect at first"
-      (let [output (with-out-str (with-in-str "g\nhello\n3\nh\nz\n4\nh\n0\n0\nm\n2\n3\n5\n6" (start-game)))
+  (it "tests a Human VS Human game where the user inputs input are incorrect at first"
+      (let [output (with-out-str (with-in-str "g\nhello\n3\nh\nz\n4\nh\n0\n0\nm\n2\n3\n5\n6\np\n2\nhello\nn" (start-game)))
             board-state-1 (create-board 3)
             board-state-2 (set-position board-state-1 0 "X")
             board-state-3 (set-position board-state-2 2 "O")
@@ -458,11 +480,68 @@
                (format-board board-state-5)" \n\n"
                (select-position (numbered-board 3))
                (format-board board-state-6)" \n\n"
-               end-game"\n")
+               end-game"\n"
+               play-again-prompt
+               invalid-play-again-input
+               invalid-play-again-input
+               invalid-play-again-input
+               "Bye for now!\n")
+          output)))
+
+  (it "tests a Human VS Human game where the player decided to play again"
+      (let [output (with-out-str (with-in-str "3\nh\nh\n0\n2\n3\n5\n6\ny\n3\nh\nh\n0\n2\n3\n5\n6\nn" (start-game)))
+            board-state-1 (create-board 3)
+            board-state-2 (set-position board-state-1 0 "X")
+            board-state-3 (set-position board-state-2 2 "O")
+            board-state-4 (set-position board-state-3 3 "X")
+            board-state-5 (set-position board-state-4 5 "O")
+            board-state-6 (set-position board-state-5 6 "X")
+            board-state-7 (create-board 3)
+            board-state-8 (set-position board-state-7 0 "X")
+            board-state-9 (set-position board-state-8 2 "O")
+            board-state-10 (set-position board-state-9 3 "X")
+            board-state-11 (set-position board-state-10 5 "O")
+            board-state-12 (set-position board-state-11 6 "X")]
+        (should=
+          (str select-board-size
+               select-first-player
+               select-opponent
+               (format-board (numbered-board 3))" \n\n"
+               (format-board board-state-1)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-2)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-4)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-5)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-6)" \n\n"
+               end-game"\n"
+               play-again-prompt
+               select-board-size
+               select-first-player
+               select-opponent
+               (format-board (numbered-board 3))" \n\n"
+               (format-board board-state-1)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-2)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-3)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-4)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-5)" \n\n"
+               (select-position (numbered-board 3))
+               (format-board board-state-6)" \n\n"
+               end-game"\n"
+               play-again-prompt
+               "Bye for now!\n")
           output)))
 
   (it "tests a Human VS Computer game"
-      (let [output (with-out-str (with-in-str "3\nh\nc\n4\n2\n7\n5\n0" (start-game)))
+      (let [output (with-out-str (with-in-str "3\nh\nc\n4\n2\n7\n5\n0\nn" (start-game)))
             board-state-1 (create-board 3)
             board-state-2 (set-position board-state-1 4 "X")
             board-state-3 (set-position board-state-2 (get-computer-position board-state-2 (numbered-board 3) "O" "X" 0) "O")
@@ -493,11 +572,13 @@
                (format-board board-state-9)" \n\n"
                (select-position (numbered-board 3))
                (format-board board-state-10)" \n\n"
-               end-game"\n")
+               end-game"\n"
+               play-again-prompt
+               "Bye for now!\n")
           output)))
 
   (it "tests a Computer VS Human game"
-      (let [output (with-out-str (with-in-str "3\nc\nh\n4\n6\n5\n1" (start-game)))
+      (let [output (with-out-str (with-in-str "3\nc\nh\n4\n6\n5\n1\nn" (start-game)))
             board-state-1 (create-board 3)
             board-state-2 (set-position board-state-1 (get-computer-position board-state-1 (numbered-board 3) "X" "O" 0) "X")
             board-state-3 (set-position board-state-2 4 "O")
@@ -527,7 +608,9 @@
                (select-position (numbered-board 3))
                (format-board board-state-9)" \n\n"
                (format-board board-state-10)" \n\n"
-               end-game"\n")
+               end-game"\n"
+               play-again-prompt
+               "Bye for now!\n")
           output))))
 
 (describe "Minimax"
