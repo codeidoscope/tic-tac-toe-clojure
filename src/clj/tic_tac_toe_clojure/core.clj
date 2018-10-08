@@ -82,7 +82,7 @@
   (let [language (prompt-user prompt)]
     (if (valid-language-selection? language)
       (keyword (string/lower-case language))
-      (select-language invalid-language-selection))))
+      (select-language (get-translated-prompt invalid-language-selection language)))))
 
 (defn pick-board-size [prompt language]
   (let [user-input (prompt-user (get-translated-prompt prompt language))]
@@ -211,10 +211,29 @@
 
 (defn make-computer-player [symbol] (ComputerPlayer. symbol))
 
+(def play-again-prompt
+  {:en "Play another game? Enter yes (Y/y) or no (N/n): \n"
+   :fr "Nouvelle partie? Choisissez oui (O/o) ou non (N/n): \n"})
+
+(def invalid-play-again-input
+  {:en "Invalid input. Please enter yes (Y/y) or no (N/n): "
+   :fr "Non valide. Choisissez oui (O/o) ou non (N/n):"})
+
+(defn valid-play-again-input? [input]
+  (boolean (some #{input} ["Y" "y" "O" "o" "N" "n"])))
+
+(defn play-again? [prompt language]
+  (let [user-input (prompt-user (get-translated-prompt prompt language))]
+    (cond
+      (and (valid-play-again-input? user-input) (boolean (some #{user-input} ["Y" "y" "O" "o"]))) (start-game)
+      (and (valid-play-again-input? user-input) (boolean (some #{user-input} ["N" "n"]))) (println "Bye for now! / Au revoir !")
+      :else (play-again? (get-translated-prompt invalid-play-again-input language) language))))
+
 (defn next-player-turn [board current-player opponent language]
   (display-board board)
   (if (game-over? board (get-symbol opponent) (get-symbol current-player))
-    (println (get-translated-prompt end-game language))
+    (do (println (get-translated-prompt end-game language))
+    (play-again? play-again-prompt language))
     (recur
       (set-position board
                     (get-move current-player board (numbered-board (get-square-root board)) opponent language)
